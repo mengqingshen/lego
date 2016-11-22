@@ -1,0 +1,28 @@
+{
+	"name":"SeanWay",
+	"version":"0.0.0",
+	"manifest_version":2,
+	"description":"个人的工具箱",
+	"browser_action":{
+		"default_icon":"assets/logo.png",
+		"default_popup":"popup.html"
+	},
+	"permissions":[
+		"background",
+		"tabs",
+		"unlimitedStorage",
+		"http://*/**",
+		"https://*/*"
+	],
+	"background":{
+		"scripts":[
+			
+		]
+	},
+	"icons": {
+	    "48": "assets/logo.png"
+	 },
+	"content_scripts":[
+
+	]
+}
