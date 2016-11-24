@@ -30,6 +30,10 @@ module.exports = {
         loader: 'style-loader!css-loader'
       },
       {
+        test: /\.scss$/,
+        loader: 'style-loader!css-loader!sass-loader?sourceMap'
+      },
+      {
         test: /\.pug$/,
         loaders: ['pug-loader']
       },
