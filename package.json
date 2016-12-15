@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "element-ui": "^1.0.0",
-    "vue": "^2.0.5"
+    "vue": "^2.0.5",
+    "vue-router": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
@@ -21,13 +22,14 @@
     "cross-env": "^1.0.6",
     "css-loader": "^0.23.1",
     "element-ui": "^1.0.2",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "html-webpack-plugin": "^2.24.1",
-    "node-sass": "^3.13.0",
+    "node-sass": "^3.13.1",
     "pug": "^2.0.0-beta6",
     "pug-loader": "^2.3.0",
     "sass": "^0.5.0",
-    "sass-loader": "^4.0.2",
+    "sass-loader": "^3.2.3",
     "scss-loader": "0.0.1",
     "style-loader": "^0.13.1",
     "vue-loader": "^9.8.0",

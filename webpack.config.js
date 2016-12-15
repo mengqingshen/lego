@@ -2,9 +2,13 @@ var path = require('path')
 var webpack = require('webpack')
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
-  entry: './src/main.js',
+  entry: {
+    'popup/js/main': './src/entrys/popup.js',
+    'contentScriptController/js/main': './src/entrys/contentScriptController.js',
+    'iframePageForImg/js/main': './src/entrys/iframePageForImg.js'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
@@ -14,7 +18,7 @@ module.exports = {
     loaders: [
       {
         test: /\.vue$/,
-        loaders: ['babel-loader', 'vue-loader']
+        loaders: ['vue-loader']
       },
       {
         test: /\.js$/,
@@ -30,8 +34,8 @@ module.exports = {
         loader: 'style-loader!css-loader'
       },
       {
-        test: /\.scss$/,
-        loader: 'style-loader!css-loader!sass-loader?sourceMap'
+        test: /\.s[a|c]ss$/,
+        loader: ExtractTextPlugin.extract('style', 'css', 'sass?sourceMap')
       },
       {
         test: /\.pug$/,
@@ -61,14 +65,28 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/templates/index.pug',
+      template: 'src/html/index.pug',
       hash: true
     }),
     new HtmlWebpackPlugin({
       filename: 'popup.html',
-      template: 'src/templates/popup.pug',
+      chunks: ['common', 'popup/js/main'],
+      template: 'src/html/popup.pug',
       hash: true
-    })
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'iframePageForImg.html',
+      cache: true,
+      chunks: ['common', 'iframePageForImg/js/main'],
+      template: 'src/html/iframePageForImg.pug',
+      hash: true
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+        cache: true,
+        name: "common",
+        filename: "common/js/common.js"
+    }),
+    new webpack.BannerPlugin("这里是打包文件头部注释！")
   ]
 }
 
