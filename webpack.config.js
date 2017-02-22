@@ -7,12 +7,16 @@ module.exports = {
   entry: {
     'popup/js/main': './src/entrys/popup.js',
     'contentScriptController/js/main': './src/entrys/contentScriptController.js',
-    'iframePageForImg/js/main': './src/entrys/iframePageForImg.js'
+    'windowForCrawl/js/main': './src/entrys/windowForCrawl.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
     filename: '[name]-[hash].js'
+  },
+  // 指定可以被 import 的文件后缀
+  resolve: {
+    extensions: ['.js', '.vue', '.json', '.sass', '.pug', '.css']
   },
   module: {
     loaders: [
@@ -75,10 +79,10 @@ module.exports = {
       hash: true
     }),
     new HtmlWebpackPlugin({
-      filename: 'iframePageForImg.html',
+      filename: 'windowForCrawl.html',
       cache: true,
-      chunks: ['common', 'iframePageForImg/js/main'],
-      template: 'src/html/iframePageForImg.pug',
+      chunks: ['common', 'windowForCrawl/js/main'],
+      template: 'src/html/windowForCrawl.pug',
       hash: true
     }),
     new webpack.optimize.CommonsChunkPlugin({

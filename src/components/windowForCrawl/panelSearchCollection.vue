@@ -1,0 +1,24 @@
+
+<template lang="pug">
+    el-card#panel-search-collection
+        .top-area
+            i.el-icon-menu
+
+</template>
+
+<style lang="sass">
+    @import url('../styles/common.scss');
+
+</style>
+
+<script>
+    /*
+    * @fileoverview 收藏列表
+    * @author sean(eli01linux@aliyun.com)
+    */
+    export default{
+        data(){
+            return {}	
+        }
+    }
+</script>

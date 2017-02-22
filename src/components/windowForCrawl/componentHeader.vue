@@ -1,10 +1,10 @@
 <template lang="pug">
     el-row.header
-        el-col(:span="2")
+        el-col(:span="4")
             i.el-icon-arrow-left
-        el-col(:span="8")
-            .title(:span="2") 图片爬取
-        el-col(:span="2")
+        el-col(:span="16" justify="center")
+            .title {{ title }}
+        el-col(:span="4")
             .close
 </template>
 <style>
@@ -13,6 +13,8 @@
         background-color: #1f2d3d;
         color: #fff;
         font-size: 20px;
+        text-align: center;
+        box-shadow: 0px 2px 20px #1f2d3d;
     }
 </style>
 <script>
@@ -22,8 +24,11 @@
 
             }
         },
-        components:{
-
+        props: {
+            title: {
+                type: String,
+                required: true
+            }
         }
     }
 </script>
