@@ -1,4 +1,4 @@
-import * as VARIABLES from '../variables'
+import * as VARIABLES from '../store/variables'
 export default {
 	/**
 	 * 获取所有网站推荐的 css 选择器
@@ -13,7 +13,7 @@ export default {
 	 * 获取所有收藏的 css 选择器
 	 */
 	getSelectorsCollected () {
-		let selectorCollectedArr
+		let selectorCollected
 		const temp = localStorage.getItem(VARIABLES.SELECTORS_COLLECTED)
 		if(!temp) {
 			return null
@@ -44,7 +44,7 @@ export default {
 	 */
 	getSelectorsHistory () {
 		let selectorHistory
-		const temp = localStorage.getItem(VARIABLEs.SELECTORS_HISTORY)
+		const temp = localStorage.getItem(VARIABLES.SELECTORS_HISTORY)
 		if(!temp){
 			return null
 		}

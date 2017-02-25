@@ -13,7 +13,11 @@ const state = {
 // getters
 const getters = {
 	currentPanel: state => state.currentPanel,
-	selectorsHistory: state => state.selectorsHistory,
+	selectorsHistory: state => {
+		return state.selectorsHistory.map(selector => {
+			return JSON.parse(selector)
+		}).reverse()
+	},
 	selectorsCollection: state => state.selectorsCollection,
 	selectorsRecommanded: state => state.selectorsRecommanded
 }
@@ -22,6 +26,19 @@ const getters = {
 const actions = {
 	gotoCollectionPanel () {
 		commit(types.SWITCH_PANEL, 'panelCollection')
+	},
+	/**
+	 * 收藏或取消收藏
+	 * 
+	 * @param{object} isCollected 是否被收藏过
+	 */
+	starOrNot(selector) {
+		if (selector.isCollected) {
+			commit(types.REMOVE_FROM_COLLECTION)
+		}
+		else {
+			commit(types.ADD_TO_COLLECTION)
+		}
 	}
 }
 

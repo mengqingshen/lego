@@ -1,4 +1,5 @@
 var path = require('path')
+var projectRoot = path.resolve(__dirname, '../')
 var webpack = require('webpack')
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -16,20 +17,34 @@ module.exports = {
   },
   // 指定可以被 import 的文件后缀
   resolve: {
-    extensions: ['.js', '.vue', '.json', '.sass', '.pug', '.css']
+    extensions: ['.js', '.vue', '.json', '.sass', 'scss', '.pug', '.css']
   },
   module: {
+    // preLoaders: [
+    //   {
+    //     test: /\.vue$/,
+    //     loader: 'eslint',
+    //     include: projectRoot,
+    //     exclude: /node_modules/
+    //   },
+    //   {
+    //     test: /\.js$/,
+    //     loader: 'eslint',
+    //     include: projectRoot,
+    //     exclude: /node_modules/
+    //   }
+    // ],
     loaders: [
       {
         test: /\.vue$/,
-        loaders: ['vue-loader']
+        loaders: 'vue-loader'
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
         query: {
-          presets: ['es2015'],
+          presets: ['es2015', 'stage-0'],
           cacheDirectory: true
         }
       },

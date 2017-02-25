@@ -10,6 +10,11 @@
     body {
         width: 300px;
         margin: 0 auto;
+        height: 540px;
+    }
+    #window-for-crawl {
+        height: 100%;
+        padding: 5px 16px;
     }
 </style>
 
