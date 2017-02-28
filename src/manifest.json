@@ -1,33 +1,33 @@
 {
-	"manifest_version":2,
-	"name":"SeanWay",
-	"version":"0.0.0",
-	"description":"个人的工具箱",
-	"browser_action":{
-		"default_icon":"assets/logo.png",
-		"default_popup":"popup.html"
-	},
-	"author": "mengqingshen",
-	"permissions":[
-		"background",
-		"tabs",
-		"unlimitedStorage",
-		"http://*/**",
-		"https://*/*"
-	],
-	"background":{
-		"page": "bg.html"
-	},
-	"icons": {
-	    "48": "assets/logo.png"
-	 },
-	"content_scripts":[
-		// {
-		// 	"matches": ["http://*//*", "https://*/*"],
-		// 	"js": ["common/js/common.js", "contentScriptController/js/main.js"]
-		// }
-	],
-	"web_accessible_resources": [
-		"windowForCrawl.html"
-	]
+  "manifest_version":2,
+  "name":"SeanWay",
+  "version":"0.0.0",
+  "description":"个人的工具箱",
+  "browser_action":{
+    "default_icon":"assets/logo.png",
+    "default_popup":"popup.html"
+  },
+  "author": "mengqingshen",
+  "permissions":[
+    "background",
+    "tabs",
+    "unlimitedStorage",
+    "http://*/**",
+    "https://*/*"
+  ],
+  "background":{
+    "page": "bg.html"
+  },
+  "icons": {
+      "48": "assets/logo.png"
+   },
+  "content_scripts":[
+    // {
+    //  "matches": ["http://*//*", "https://*/*"],
+    //  "js": ["common/js/common.js", "contentScriptController/js/main.js"]
+    // }
+  ],
+  "web_accessible_resources": [
+    "windowForCrawl.html"
+  ]
 }

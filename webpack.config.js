@@ -10,10 +10,10 @@ var extractCSS = new ExtractTextPlugin("windowForCrawl.css");
 module.exports = {
   context: path.resolve(__dirname, './src'),
   entry: {
-    'bg/js/main': './entrys/bg.js',
-    'popup/js/main': './entrys/popup.js',
-    'contentScriptController/js/main': './entrys/contentScriptController.js',
-    'windowForCrawl/js/main': './entrys/windowForCrawl.js'
+    'background/index': './background/entry.js',
+    'popup/index': './popup/entry.js',
+    'content-script/index': './content-script/entry.js',
+    'iframes/crawl-img/index': './iframes/crawl-img/entry.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -108,7 +108,7 @@ module.exports = {
   devtool: '#eval-source-map',
   plugins: [
     new ExtractTextPlugin({
-      filename: "stylesheets/insertCSSForCrawl.css",
+      filename: "content-css/crawl.css",
       disable: false,
       allChunks: true
     }),
@@ -118,28 +118,28 @@ module.exports = {
       "window.Zepto": "webpack-zepto"
     }),
     new HtmlWebpackPlugin({
-      filename: 'bg.html',
-      template: 'html/bg.pug',
-      chunks: ['common', 'bg/js/main'],
+      filename: 'background/index.html',
+      template: 'background/index.pug',
+      chunks: ['common', 'background/index'],
       hash: true
     }),
     new HtmlWebpackPlugin({
-      filename: 'popup.html',
-      chunks: ['common', 'popup/js/main'],
-      template: 'html/popup.pug',
+      filename: 'popup/index.html',
+      chunks: ['common', 'popup/index'],
+      template: 'popup/index.pug',
       hash: true
     }),
     new HtmlWebpackPlugin({
-      filename: 'windowForCrawl.html',
+      filename: 'iframes/crawl-img/index.html',
       cache: true,
-      chunks: ['common', 'windowForCrawl/js/main'],
-      template: 'html/windowForCrawl.pug',
+      chunks: ['common', 'iframes/crawl-img/index'],
+      template: 'iframes/crawl-img/index.pug',
       hash: true
     }),
     new webpack.optimize.CommonsChunkPlugin({
         cache: true,
         name: "common",
-        filename: "common/js/common.js"
+        filename: "common/common.js"
     }),
     new webpack.BannerPlugin("这里是打包文件头部注释！")
   ]
