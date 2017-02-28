@@ -1,7 +1,37 @@
 import Vue from 'vue'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
-import App from '../views/popup.vue'
-Vue.use(ElementUI)
+import { Crawler } from '../api/crawl'
 
+new Vue({
+	created () {
+		this.initIFrame()
+
+		const _this = this
+		chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
+			switch(request.command) {
+				case 'fireCrawl':
+					console.log('开始爬取图片信息>>>')
+					sendResponse(_this.crawl(request.CSSSelector))
+					console.log('>>>完成爬取任务，返回爬取的数据。')
+					break
+				default:
+					break
+			}
+		})
+	},
+	methods: {
+		crawl (cssSelector) {
+			const crawler = new Crawler()
+			crawler.getImgUrlsByCSSSelector(cssSelector)
+		},
+		initIFrame () {
+			const iframe = $('<iframe />', {
+				id: "seanway-crawl-window",
+				src: chrome.extension.getURL('windowForCrawl.html'),
+				frameborder: 0,
+				seamless: 'seamless',
+				scrolling: 'no'
+			}).appendTo($(document.body))
+		}
+	}
+})
 

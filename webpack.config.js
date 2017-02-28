@@ -4,16 +4,24 @@ var webpack = require('webpack')
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+var extractCSS = new ExtractTextPlugin("windowForCrawl.css");
+
 module.exports = {
+  context: path.resolve(__dirname, './src'),
   entry: {
-    'popup/js/main': './src/entrys/popup.js',
-    'contentScriptController/js/main': './src/entrys/contentScriptController.js',
-    'windowForCrawl/js/main': './src/entrys/windowForCrawl.js'
+    'bg/js/main': './entrys/bg.js',
+    'popup/js/main': './entrys/popup.js',
+    'contentScriptController/js/main': './entrys/contentScriptController.js',
+    'windowForCrawl/js/main': './entrys/windowForCrawl.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
-    filename: '[name]-[hash].js'
+    filename: '[name].js'
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, './src'),  // New
   },
   // 指定可以被 import 的文件后缀
   resolve: {
@@ -34,45 +42,62 @@ module.exports = {
     //     exclude: /node_modules/
     //   }
     // ],
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
-        loaders: 'vue-loader'
+        use: ['vue-loader']
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          presets: ['es2015', 'stage-0'],
-          cacheDirectory: true
-        }
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+                presets: ['es2015', 'stage-0'],
+                cacheDirectory: true
+            }
+          }
+        ],
+        exclude: /node_modules/
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.s[a|c]ss$/,
-        loader: ExtractTextPlugin.extract('style', 'css', 'sass?sourceMap')
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: ['css-loader', 'sass-loader'],
+          publicPath: "/dist"
+        })
       },
       {
         test: /\.pug$/,
-        loaders: ['pug-loader']
+        use: 'pug-loader'
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
-        loader: 'file-loader',
-        query: {
-          name: 'assets/[name].[ext]?[hash]'
-        }
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'assets/[name].[ext]?[hash]'
+            }
+          }
+        ]
+        
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?\S*)?$/,
-        loader: 'file-loader',
-        query: {
-          name: 'assets/[name].[ext]?[hash]'
-        }
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'assets/[name].[ext]?[hash]'
+            }
+          }
+        ]
       }
     ]
   },
@@ -82,22 +107,33 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   plugins: [
+    new ExtractTextPlugin({
+      filename: "stylesheets/insertCSSForCrawl.css",
+      disable: false,
+      allChunks: true
+    }),
+    new webpack.ProvidePlugin({
+      $: "webpack-zepto",
+      Zepto: "webpack-zepto",
+      "window.Zepto": "webpack-zepto"
+    }),
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'src/html/index.pug',
+      filename: 'bg.html',
+      template: 'html/bg.pug',
+      chunks: ['common', 'bg/js/main'],
       hash: true
     }),
     new HtmlWebpackPlugin({
       filename: 'popup.html',
       chunks: ['common', 'popup/js/main'],
-      template: 'src/html/popup.pug',
+      template: 'html/popup.pug',
       hash: true
     }),
     new HtmlWebpackPlugin({
       filename: 'windowForCrawl.html',
       cache: true,
       chunks: ['common', 'windowForCrawl/js/main'],
-      template: 'src/html/windowForCrawl.pug',
+      template: 'html/windowForCrawl.pug',
       hash: true
     }),
     new webpack.optimize.CommonsChunkPlugin({

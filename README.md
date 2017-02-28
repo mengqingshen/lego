@@ -1,5 +1,10 @@
 # chrome-extension-seanway
 
+## 构建系统
+
++ webpack2
++ SASS
++ pug
 
 ## Start
 

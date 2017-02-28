@@ -1,5 +1,24 @@
 import * as VARIABLES from '../store/variables'
+
+/**
+ * 一个简单的爬虫
+ */
+class Crawler {
+	/**
+	 * 获取页面中的图片的 URL
+	 * 
+	 * @param{string} CSSSelector css 选择器
+	 * @returns{array} 找到的所有图片的 URL 组成的数组
+	 */
+	getImgUrlsByCSSSelector (CSSSelector) {
+		$(CSSSelector).each(function(index, item) {
+			console.log(item)
+		})
+	}
+}
+
 export default {
+	Crawler,
 	/**
 	 * 获取所有网站推荐的 css 选择器
 	 * 

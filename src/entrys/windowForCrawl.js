@@ -8,6 +8,8 @@ import 'element-ui/lib/theme-default/index.css'
 import WindowForCrawl from '../views/windowForCrawl.vue'
 import store from '../store'
 
+import '../styles/windowForCrawl.scss'
+
 Vue.use(ElementUI)
 
 new Vue({

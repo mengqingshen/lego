@@ -24,20 +24,30 @@ const getters = {
 
 // actions
 const actions = {
-	gotoCollectionPanel () {
+	/**
+	 * 爬取图片
+	 */
+	triggerCrawl ({ commit }, cssSelector) {
+		commit(types.SWITCH_PANEL, 'panelResult')
+		chrome.extension.sendRequest({
+			command: 'fireCrawl',
+			cssSelector
+		})
+	},
+	gotoCollectionPanel ({ commit }) {
 		commit(types.SWITCH_PANEL, 'panelCollection')
 	},
 	/**
 	 * 收藏或取消收藏
 	 * 
-	 * @param{object} isCollected 是否被收藏过
+	 * @param{object} selector css选择器数据
 	 */
-	starOrNot(selector) {
+	starOrNot({ commit }, selector) {
 		if (selector.isCollected) {
-			commit(types.REMOVE_FROM_COLLECTION)
+			commit(types.REMOVE_FROM_COLLECTION, selector)
 		}
 		else {
-			commit(types.ADD_TO_COLLECTION)
+			commit(types.ADD_TO_COLLECTION, selector)
 		}
 	}
 }
