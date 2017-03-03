@@ -1,5 +1,7 @@
 import Vue from 'vue'
-import { Crawler } from '../iframes/crawl-img/api/crawl'
+import {
+  crawler
+} from '../iframes/crawl-img/api/crawl'
 
 new Vue({
   created () {
@@ -10,7 +12,7 @@ new Vue({
       switch(request.command) {
         case 'fireCrawl':
           console.log('开始爬取图片信息>>>')
-          sendResponse(_this.crawl(request.CSSSelector))
+          sendResponse(_this.crawl(request.cssSelector))
           console.log('>>>完成爬取任务，返回爬取的数据。')
           break
         default:
@@ -20,8 +22,7 @@ new Vue({
   },
   methods: {
     crawl (cssSelector) {
-      const crawler = new Crawler()
-      crawler.getImgUrlsByCSSSelector(cssSelector)
+      return crawler.getImgUrlsByCSSSelector(cssSelector)
     },
     initIFrame () {
       const iframe = $('<iframe />', {

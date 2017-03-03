@@ -10,15 +10,26 @@ class Crawler {
    * @param{string} CSSSelector css 选择器
    * @returns{array} 找到的所有图片的 URL 组成的数组
    */
-  getImgUrlsByCSSSelector (CSSSelector) {
-    $(CSSSelector).each(function(index, item) {
-      console.log(item)
-    })
+  getImgUrlsByCSSSelector (cssSelector) {
+    const imgDoms = $(cssSelector)
+    if(imgDoms) {
+      return Array.from(imgDoms).map(function(img) {
+        return [
+          img.src,
+          {
+            width: img.naturalWidth,
+            height: img.naturalHeight
+          }
+        ]
+      })
+    }
+    
+    return []
   }
 }
 
+export const crawler = new Crawler()
 export default {
-  Crawler,
   /**
    * 获取所有网站推荐的 css 选择器
    * 

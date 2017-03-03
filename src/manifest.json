@@ -5,7 +5,7 @@
   "description":"个人的工具箱",
   "browser_action":{
     "default_icon":"assets/logo.png",
-    "default_popup":"popup.html"
+    "default_popup":"popup/index.html"
   },
   "author": "mengqingshen",
   "permissions":[
@@ -16,7 +16,7 @@
     "https://*/*"
   ],
   "background":{
-    "page": "bg.html"
+    "page": "background/index.html"
   },
   "icons": {
       "48": "assets/logo.png"
@@ -28,6 +28,6 @@
     // }
   ],
   "web_accessible_resources": [
-    "windowForCrawl.html"
+    "iframes/crawl-img/index.html"
   ]
 }

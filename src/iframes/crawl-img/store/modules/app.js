@@ -3,15 +3,33 @@ import * as types from '../mutation-types'
 
 // initial state
 const state = {
-  currentPanel: 'panelSearch',
+  lastPanel: 'search',
+  currentPanel: 'search', // search, collection, download
   selectorsHistory: crawl.getSelectorsHistory() || [],
   selectorsCollection: crawl.getSelectorsCollected() || [],
   selectorsRecommanded: crawl.getSelectorsRecommanded() || [],
-  imgUrls: []
+  imgs: [
+    ['http://tu.zmzjstu.com/ftp/2017/0206/b_eeb77cea52c6472865f623a26865c185.jg', { width: '200px', height: '400px', checked: true}],
+    ['http://tu.zmzjstu.com/ftp/2017/0302/s_8bb968c1fc3937e4b33b0b70fa90b779.jg', { width: '200px', height: '400px', checked: true}],
+    ['http://tu.zmzjstu.com/ftp/2017/0302/s_daa4b2a8467bea662b446f4e9f961d74.jpg', { width: '200px', height: '400px', checked: true}],
+    ['http://tu.zmzjstu.com/ftp/2017/0303/s_357a3b63cce671824f21585d4c69519a.jpg', { width: '200px', height: '400px', checked: true}],
+    ['http://tu.zmzjstu.com/ftp/2017/0302/s_e57cc049cd712ffb82a703cbc1c0bd92.jpg', { width: '200px', height: '400px', checked: true}],
+    ['http://tu.zmzjstu.com/ftp/2017/0302/s_8bb968c1fc3937e4b33b0b70fa90b779.jpg', { width: '200px', height: '400px', checked: true}],
+    ['http://tu.zmzjstu.com/ftp/2017/0302/s_daa4b2a8467bea662b446f4e9f961d74.jpg', { width: '200px', height: '400px', checked: true}]
+  ]
 }
 
 // getters
 const getters = {
+  // 是否选中了全部
+  checkAll: state => state.imgs.length === state.imgs.filter(([key, value]) => value.checked).length,
+
+  // 是否选择了部分图片
+  isIndeterminate: (state, getters) => {
+    const checkedCount = state.imgs.filter(([key, value]) => value.checked).length
+    const allCount = state.imgs.length
+    return checkedCount > 0 && checkedCount < allCount
+  },
   currentPanel: state => state.currentPanel,
   selectorsHistory: state => {
     return state.selectorsHistory.map(selector => {
@@ -24,22 +42,41 @@ const getters = {
 
 // actions
 const actions = {
+  // 全选或全不选所有图片
+  handleCheckAllChange({ commit, state }, event) {
+    if(event.target.checked) {
+      commit(types.SELECT_IMG_ALL)
+    }
+    else {
+      commit(types.UNSELECT_IMG_ALL)
+    }
+  },
+
+  /**
+   * 返回
+   */
+  back({ commit }) {
+    commit(types.BACK)
+  },
+
   /**
    * 爬取图片
    */
-  triggerCrawl ({ commit }, cssSelector) {
-    commit(types.SWITCH_PANEL, 'panelResult')
-    chrome.extension.sendRequest({
-      command: 'fireCrawl',
-      cssSelector
-    })
+  triggerCrawl({ commit }, cssSelector) {
+    commit(types.SWITCH_PANEL, 'download')
+    chrome.tabs.getSelected(null, function(tab) {
+      chrome.tabs.sendRequest(tab.id, {
+        command: 'fireCrawl',
+        cssSelector
+      }, (imgs) => {
+        commit(types.ADD_IMGS, imgs)
+      })
+    });
   },
-  gotoCollectionPanel ({ commit }) {
-    commit(types.SWITCH_PANEL, 'panelCollection')
-  },
+
   /**
    * 收藏或取消收藏
-   * 
+   *
    * @param{object} selector css选择器数据
    */
   starOrNot({ commit }, selector) {
@@ -54,8 +91,15 @@ const actions = {
 
 // mutations
 const mutations = {
+  // 返回
+  [types.BACK] (state) {
+    state.currentPanel = state.lastPanel
+  },
+
+  // 切换面板
   [types.SWITCH_PANEL] (state, panelName) {
-    commit(types.SWITCH_PANEL, panelName)
+    state.lastPanel = state.currentPanel
+    state.currentPanel = panelName
   },
 
   // 收藏
@@ -101,49 +145,43 @@ const mutations = {
     const tempStr = JSON.stringify({ hostname, cssSelector })
     const historySet = new Set(state.selectorsHistory)
     historySet.delete(tempStr)
-    
+
     state.selectorsHistory = Array.from(historySet)
   },
 
   // 选中某个图片
-  [types.SELECT_IMG] (state, imgSrc) {
-    const imgUrlsMap = new Map(state.imgUrls)
-    if(imgUrlsMap.has(imgSrc)) {
-      imgUrlsMap.set(imgSrc, true)
-      state.imgUrls = Array.from(imgUrlsMap)
-    }
+  [types.CHANGE_CHECKEDIMGS] (state, checkedImgUrls) {
+    const imgsMap = new Map(state.imgs)
+    imgsMap.forEach((key, item) => {
+      item.checked = checkedImgUrls.includes(key)
+    })
+    const target = imgsMap.get(imgSrc)
+    state.imgs = Array.from(imgsMap)
   },
 
-  // 取消某个图片
-  [types.UNSELECT_IMG] (state, imgSrc) {
-    const imgUrlsMap = new Map(state.imgUrls)
-    if(imgUrlsMap.has(imgSrc)) {
-      imgUrlsMap.set(imgSrc, false)
-      state.imgUrls = Array.from(imgUrlsMap)
-    }
+  // 选中所有图片
+  [types.SELECT_IMG_ALL] (state) {
+    state.imgs.forEach(item => {
+      item[1].checked = true
+    })
+  },
+
+  // 取消选中所有图片
+  [types.UNSELECT_IMG_ALL] (state) {
+    state.imgs.forEach(item => {
+      item[1].checked = false
+    })
   },
 
   // 添加一组图片
-  [types.ADD_IMGS] (state, imgSrcs)
+  [types.ADD_IMGS] (state, newImgs)
   {
-    const imgUrlsMap = new Map(state.imgUrls)
-    
-    // 默认选中
-    imgSrcs.forEach(imgSrc => {
-      imgUrlsMap.set(imgSrc, false)
-    })
-    state.imgUrls = Array.from(imgUrlsMap)
-  },
-
-  // 清除一组图片
-  [types.REMOVE_IMGS] (state, imgSrcs) {
-    const imgUrlsMap = new Map(state.imgUrls)
-    
-    // 默认选中
-    imgSrcs.forEach(imgSrc => {
-      imgUrlsMap.delete(imgSrc)
-    })
-    state.imgUrls = Array.from(imgUrlsMap)
+    if(newImgs) {
+      const temp = [...state.imgs]
+      temp.push(...newImgs)
+      state.imgs = temp
+      state.checkedImgUrls = [...state.imgUrls]
+    }
   }
 }
 

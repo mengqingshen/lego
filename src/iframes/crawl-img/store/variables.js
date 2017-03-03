@@ -8,6 +8,10 @@
     {
       hostname: 'laputa-er.github.io',
       cssSelector: '.post-body .fancybox>img'
+    },
+    {
+      hostname: 'www.baidu.com',
+      cssSelector: 'img'
     }
   ].map(item => {
     return JSON.stringify(item)

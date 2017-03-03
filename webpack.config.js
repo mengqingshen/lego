@@ -107,6 +107,11 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   plugins: [
+    new CopyWebpackPlugin([
+      {
+        from: 'manifest.json'
+      }
+    ]),
     new ExtractTextPlugin({
       filename: "content-css/crawl.css",
       disable: false,
@@ -154,12 +159,6 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       }
     }),
-    new CopyWebpackPlugin([
-      {
-        from: 'manifest.json'
-      }
-    ])
-    ,
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false

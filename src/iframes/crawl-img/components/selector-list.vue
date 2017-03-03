@@ -1,13 +1,13 @@
 <template lang="pug">
   ul.list-wrap-selectors
-    li(v-for="selector of selectorsListWithStatus" @click="triggerCrawl(selector.cssSelector)")
+    li(v-for="selector of selectorsListWithStatus" @click="triggerCrawl(selector.cssSelector, $event)")
       p {{selector.cssSelector}}
       p {{selector.hostname}}
       i(:key="selector.id" @click.stop="starOrNot(selector, $event)" v-bind:class="[selector.isCollected ? 'el-icon-star-on' : 'el-icon-star-off']")
 
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
   .list-wrap-selectors {
     li {
       background: #fff;
@@ -19,11 +19,14 @@
       transition: .5s box-shadow;
       margin-bottom: 5px;
       border-top: 1px solid #D3DCE6;
+      user-select: none;
       &:hover {
         box-shadow: 0px -2px 3px #D3DCE6;
         cursor: pointer;
       }
-
+      &:active {
+        box-shadow: 3px -2px 3px #D3DCE6;
+      }
       p {
         padding: 0;
         margin: 0;

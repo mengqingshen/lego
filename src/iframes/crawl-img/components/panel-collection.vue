@@ -1,13 +1,12 @@
 
 <template lang="pug">
-    el-card#panel-search-collection
+    el-card#panel-collection
         .top-area
             i.el-icon-menu
 
 </template>
 
 <style lang="sass">
-    @import url('../styles/common.scss');
 
 </style>
 
@@ -18,7 +17,7 @@
     */
     export default{
         data(){
-            return {}	
+            return {} 
         }
     }
 </script>

@@ -20,7 +20,7 @@
               file: 'common/common.js'
             })
             chrome.tabs.executeScript(null, {
-              file: 'content-script/entry.js'
+              file: 'content-script/index.js'
             })
             chrome.tabs.insertCSS(null, {
               file: 'content-css/crawl.css'

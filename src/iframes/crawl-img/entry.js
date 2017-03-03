@@ -9,11 +9,12 @@ import App from './views/app.vue'
 import store from './store'
 
 import '../../content-css/crawl-img.scss'
+import '../../assets/iconfont/iconfont.css'
 
 Vue.use(ElementUI)
 
 new Vue({
     el: '#app',
     store,
-    render: h => h(WindowForCrawl)
+    render: h => h(App)
 })
