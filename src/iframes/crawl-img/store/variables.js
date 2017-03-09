@@ -13,9 +13,7 @@
       hostname: 'www.baidu.com',
       cssSelector: 'img'
     }
-  ].map(item => {
-    return JSON.stringify(item)
-  })
+  ]
 
   localStorage.setItem('SELECTORS_HISTORY', JSON.stringify(historySelectors))
 

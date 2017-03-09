@@ -1,0 +1,11 @@
+@import "./_variable";
+.clearfix {
+	*zoom: 1;
+}
+.clearfix:before {
+	display: table;
+	content: '';
+}
+.clearfix:after {
+	clear: both;
+}

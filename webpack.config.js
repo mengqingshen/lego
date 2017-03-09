@@ -8,6 +8,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var extractCSS = new ExtractTextPlugin("windowForCrawl.css");
 
 module.exports = {
+  cache: true,
   context: path.resolve(__dirname, './src'),
   entry: {
     'background/index': './background/entry.js',

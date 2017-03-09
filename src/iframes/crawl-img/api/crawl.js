@@ -17,14 +17,30 @@ class Crawler {
         return [
           img.src,
           {
-            width: img.naturalWidth,
-            height: img.naturalHeight
+            w: img.naturalWidth,
+            h: img.naturalHeight,
+            checked: true,
+            downloaded: false
           }
         ]
       })
     }
-    
     return []
+  }
+
+  /**
+   * 批量下载图片到本地
+   * 
+   * @param{array} imgSrcs 需要下载的图片链接
+   */
+  downloadImgBySrc(imgSrcs) {
+    const a = $('<a download>')
+    return new Promise((resolve, reject) => {
+      imgSrcs.forEach(src => {
+        a.attr('href', src).click()
+      })
+      resolve();
+    })
   }
 }
 
@@ -63,8 +79,7 @@ export default {
    * @param {Array} selectorCollected 收藏的 css 选择器数据
    */
   saveSelectorsCollected (selectorsCollected) {
-    const selectorsCollectedArr = selectorsCollected
-    localStorage.setItem(VARIABLES.SELECTORS_COLLECTED, JSON.stringify(selectorsCollectedArr))
+    localStorage.setItem(VARIABLES.SELECTORS_COLLECTED, JSON.stringify(selectorsCollected))
   },
 
   /**
@@ -73,18 +88,18 @@ export default {
    * @returns{Array}
    */
   getSelectorsHistory () {
-    let selectorHistory
+    let selectorsHistory
     const temp = localStorage.getItem(VARIABLES.SELECTORS_HISTORY)
     if(!temp){
       return null
     }
     try {
-      selectorHistory = JSON.parse(temp)
+      selectorsHistory = JSON.parse(temp)
     }
     catch (err) {
       console.error(err)
     }
-    return selectorHistory
+    return selectorsHistory
   },
 
   /**
@@ -93,7 +108,6 @@ export default {
    * @param{Array} selectorsHistory
    */
   saveSelectorsHistory (selectorsHistory) {
-    const selectorsCollectedArr = selectorsHistory
-    localStorage.setItem(VARIABLES.SELECTORS_HISTORY, JSON.stringify(selectorsHistoryArr))
+    localStorage.setItem(VARIABLES.SELECTORS_HISTORY, JSON.stringify(selectorsHistory))
   }
 }
