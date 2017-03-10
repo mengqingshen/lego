@@ -119,9 +119,9 @@ module.exports = {
       allChunks: true
     }),
     new webpack.ProvidePlugin({
-      $: "webpack-zepto",
-      Zepto: "webpack-zepto",
-      "window.Zepto": "webpack-zepto"
+      $: "jQuery",
+      jquery: "jQuery",
+      "window.jQuery": "jQuery"
     }),
     new HtmlWebpackPlugin({
       filename: 'background/index.html',
