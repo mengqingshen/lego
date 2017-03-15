@@ -25,6 +25,7 @@
             chrome.tabs.insertCSS(null, {
               file: 'content-css/crawl.css'
             })
+            sendResponse()
             break;
         }
       })

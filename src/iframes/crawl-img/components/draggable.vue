@@ -21,7 +21,7 @@
 		border: 1px solid transparent;
 		border-radius: 5px;
 		overflow: hidden;
-		background: #324057;
+		background: transparent;
 		z-index: 999999999999999999;
 	}
 
@@ -68,14 +68,8 @@
 				this.maxY = document.documentElement.clientHeight - this.$refs.draggable.offsetHeight
 			},
 			resetCurrentPos() {
-				const clientWidth = document.documentElement.clientWidth
-				const clientHeight = document.documentElement.clientHeight
-
-				const offsetWidth = this.$refs.draggable.offsetWidth
-				const offsetHeight = this.$refs.draggable.offsetHeight
-				
-				this.pos.left = (clientWidth - offsetWidth) / 2
-				this.pos.top = (clientHeight - offsetHeight) / 2
+				this.pos.left =0
+				this.pos.top = 0
 			},
 			handleMouseDown(e) {
 				this.mouseOffsetX = e.pageX - this.$refs.draggable.offsetLeft

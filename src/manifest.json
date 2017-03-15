@@ -23,13 +23,9 @@
   "icons": {
       "48": "assets/way.png"
    },
-  "content_scripts":[
-    // {
-    //  "matches": ["http://*//*", "https://*/*"],
-    //  "js": ["common/js/common.js", "contentScriptController/js/main.js"]
-    // }
-  ],
+  "content_scripts":[],
   "web_accessible_resources": [
-    "iframes/crawl-img/index.html"
+    "iframes/crawl-img/index.html",
+    "chunks/*.js"
   ]
 }

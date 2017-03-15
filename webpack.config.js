@@ -14,12 +14,14 @@ module.exports = {
         'background/index': './background/entry.js',
         'popup/index': './popup/entry.js',
         'content-script/index': './content-script/entry.js',
-        'iframes/crawl-img/index': './iframes/crawl-img/entry.js'
+        'iframes/crawl-img/index': './iframes/crawl-img/entry.js',
+        vendor: ['vue', 'vuex', 'jquery']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/',
-        filename: '[name].js'
+        filename: '[name].js',
+        chunkFilename: "/chunks/[name].js"
     },
     devServer: {
         contentBase: path.resolve(__dirname, './src'),  // New
@@ -129,25 +131,25 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: 'background/index.html',
             template: 'background/index.pug',
-            chunks: ['common', 'background/index'],
+            chunks: ['vendor', 'background/index'],
             hash: true
         }),
         new HtmlWebpackPlugin({
             filename: 'popup/index.html',
-            chunks: ['common', 'popup/index'],
+            chunks: ['vendor', 'popup/index'],
             template: 'popup/index.pug',
             hash: true
         }),
         new HtmlWebpackPlugin({
             filename: 'iframes/crawl-img/index.html',
             cache: true,
-            chunks: ['common', 'iframes/crawl-img/index'],
+            chunks: ['vendor', 'iframes/crawl-img/index'],
             template: 'iframes/crawl-img/index.pug',
             hash: true
         }),
         new webpack.optimize.CommonsChunkPlugin({
                 cache: true,
-                name: "common",
+                names: ['vendor'],
                 filename: "common/common.js"
         }),
         new webpack.BannerPlugin("这里是打包文件头部注释！")

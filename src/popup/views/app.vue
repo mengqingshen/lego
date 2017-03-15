@@ -13,24 +13,22 @@
         },
         methods: {
             ping () {
-                if (chrome.tabs.getSelected) {
-                    chrome.tabs.getSelected(null, tab => {
-                        chrome.tabs.sendRequest(tab.id, {
-                            command: 'howareyou'
-                        }, res => {
-                            if (res === 'fine') {
-                                this.toolDownPic.created = true
-                                this.toolDownPic.disabled = true
-                            }
-                            else if (res === 'hidden') {
-                                this.toolDownPic.disabled = false
-                            }
-                        })
+                chrome.tabs.getSelected(null, tab => {
+                    chrome.tabs.sendRequest(tab.id, {
+                        command: 'howareyou'
+                    }, res => {
+                        if (res === 'fine') {
+                            this.toolDownPic.created = true
+                            this.toolDownPic.disabled = true
+                        }
+                        else if (res === 'hidden') {
+                            this.toolDownPic.created = true
+                            this.toolDownPic.disabled = false
+                        }
                     })
-                }
+                })
             },
             showCrawlWindow () {
-                console.log(this.$data)
                 if (!this.toolDownPic.disabled) {
                     if (this.toolDownPic.created) {
                         chrome.tabs.getSelected(null, tab => {
