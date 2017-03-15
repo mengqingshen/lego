@@ -15,7 +15,7 @@
               'from the extension')
         console.log(request.command)
         switch(request.command) {
-          case 'showCrawlWindow':
+          case 'create-craw-window':
             chrome.tabs.executeScript(null, {
               file: 'common/common.js'
             })

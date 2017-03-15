@@ -3,11 +3,13 @@
     import {
         mapGetters
     } from 'vuex'
+    import $ from 'expose-loader?$!jquery'
+    import '../lib/jquery.ba-resize.js'
     export default {
         mounted () {
-            window.onresize = function (e) {
-                console.log(e)
-            }
+            $('#window-for-crawl').resize(e => {
+                this.fireResize()
+            }).resize()
         },
         computed: {
             ...mapGetters(['currentPanel'])
@@ -24,8 +26,18 @@
             }
         },
         methods: {
-            handleResize (e) {
-                console.log('resize')
+            fireResize (e) {
+                if (chrome.tabs) {
+                    chrome.tabs.getSelected(null, tab => {
+                        chrome.tabs.sendRequest(tab.id, {
+                            command: 'resize',
+                            size: {
+                                width: $('#window-for-crawl').width() + 'px',
+                                height: $('#window-for-crawl').height() + 'px'
+                            }
+                        })
+                    })
+                }
             }
         }
     }
@@ -45,7 +57,6 @@
         margin: 0;
         padding: 0;
         font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-        width: 250px;
         margin: 0 auto;
     }
     i {
@@ -61,7 +72,9 @@
     #window-for-crawl {
         position: relative;
         width: 220px;
-        background: $color-light-black;
+        background: $color-black;
+        border-radius: 5px;
+        overflow: hidden;
         .icon-base {
             font-size: 16px;
             padding: 0 3px;
@@ -69,12 +82,6 @@
         .top-area {
             position: relative;
             padding: 5px;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: $color-black;
-            z-index: 11;
-            box-shadow: 0px 3px 20px $color-black;
         }
         .scroll-wrapper {
             position: relative;

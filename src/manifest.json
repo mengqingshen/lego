@@ -4,11 +4,12 @@
   "version":"0.0.0",
   "description":"个人的工具箱",
   "browser_action":{
-    "default_icon":"assets/logo.png",
+    "default_icon":"assets/way.png",
     "default_popup":"popup/index.html"
   },
   "author": "mengqingshen",
   "permissions":[
+    "storage",
     "background",
     "activeTab",
     "tabs",
@@ -20,7 +21,7 @@
     "page": "background/index.html"
   },
   "icons": {
-      "48": "assets/logo.png"
+      "48": "assets/way.png"
    },
   "content_scripts":[
     // {

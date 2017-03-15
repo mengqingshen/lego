@@ -15,68 +15,63 @@
     import * as types from '../store/mutation-types'
     import IScroll from 'iscroll'
     export default {
-        beforeDestore() {
+        beforeDestore () {
             if(this.listScroll) {
                 this.listScroll.destroy()
                 this.listScroll = null
             }
         },
-        mounted() {
+        mounted () {
             this.initIScroll()
         },
         watch: {
             // 如果列表长度发生变化就更新 IScroll
-            imgUrls(value, oldValue) {
+            imgUris (value, oldValue) {
                 if(value.length !== oldValue.length) {
                     if(this.listScroll) {
                         Vue.nextTick(() => {    
                             this.listScroll.refresh()
                         })
                     }
+                    else {
+                        this.initIScroll()
+                    }
                 }
             }
         },
         computed: {
-            checkedImgUrls: {
-                get () {
-                    return this.$store.state.crawl.imgs.filter(([key, value]) => value.checked && !value.downloaded).map(([key, value]) => key)
-                },
-                set (newValue) {
-                    this.$store.commit(types.CHANGE_CHECKEDIMGS, newValue)
-                }
-            },
-            ...mapState({
-                imgUrls: state => state.crawl.imgs.filter(([key, value]) => !value.downloaded).map(([src, { w, h }]) => {
-                    const height = ~~(h / w * state.crawl.imgWidth) + 'px'
-                    return {
-                        src,
-                        style: {
-                            height,
-                            "line-height": height,
-                            "background-image": `url(${src})`
-                        }
-                    }
-                })
-            }),
             ...mapGetters([
-                'isIndeterminate',
-                'checkAll'
+                'isPreviewDownload',
+                'isGrid',
+                'checkAll',
+                'checkAllOff',
+                'checkSome',
+                'imgWidth',
+                'imgUris',
+                'checkedCount'
             ])
         },
         methods: {
+            handlePicClicked () {
+
+            },
             initIScroll() {
-                this.listScroll = new IScroll('.scroll-wrapper', {
-                    mouseWheel: true,
-                    bounce: true,
-                    scrollbars: true,
-                    fadeScrollbars: true
-                })
+                if (!this.listScroll) {
+                    this.listScroll = new IScroll('.scroll-wrapper', {
+                        mouseWheel: true,
+                        bounce: true,
+                        scrollbars: true,
+                        fadeScrollbars: true
+                    })
+                }
             },
             ...mapActions([
+                'handleCheck',
+                'handleClickPreviewType',
+                'handleCheckedMass',
+                'handlePreviewClicked',
                 'handleDownloadClicked',
-                'back',
-                'handleCheckAllChange',
-                'handleCheckedImgsChange'
+                'back'
             ])
         }
     }
@@ -86,19 +81,31 @@
     #panel-download
         .top-area
             .header
-                i.el-icon-arrow-left.icon-base(@click="back")
-            .btn-wrap
-                el-button(type="primary", icon="download" @click.stop="handleDownloadClicked") 下载({{checkedImgUrls.length}}/{{imgUrls.length}})
-                    i.iconfont.icon-icondownload.icon-base
+                span.iconfont-wrap
+                    i.el-icon-arrow-left.icon-base(@click="back")
+                .btn-wrap
+                    el-button(icon="download", size="small", @click.stop="handleDownloadClicked") 下载({{checkedCount}}/{{imgUris.length}})
+                        i.iconfont.icon-icondownload.icon-base
+                span.iconfont-wrap
+                    i.iconfont(:class="[isPreviewDownload ? 'icon-eye' : 'icon-hide']", @click="handlePreviewClicked")
+            .tool-bar(v-show="isPreviewDownload")
+                span.iconfont-wrap
+                    i.iconfont(:class="{ 'icon-quanxuan': checkAll, 'icon-qudiaoquanxuan': checkAllOff, 'icon-qudiaoquanxuan1': checkSome}", @click="handleCheckedMass")
+                span.iconfont-wrap
+                    i.iconfont(:class="[isGrid ? 'icon-viewgrid' : 'icon-viewlist']", @click="handleClickPreviewType")
+        .scroll-wrapper(v-show="isPreviewDownload")
+            .list-area(v-if="imgUris.length > 0")
+                .box-wrap(v-for="img in imgUris", @click="handleCheck(img.uri)")
+                    .box
+                        .checked-tag
+                            i.iconfont.icon-selected(v-if="img.checked")
+                        .pic(:style="img.size")
+                            img(:src="img.uri")
+                        strong(:style="{ width: imgWidth + 'px' }") {{img.picName}}
+                        strong(:style="{ width: imgWidth + 'px' }") {{img.w + ' x ' + img.h}}
+            .empty-list-view(v-if="imgUris.length === 0")
+                i.iconfont.icon-empty
                     
-        .tool-bar
-            el-checkbox(:indeterminate="isIndeterminate", v-model="checkAll", @change="handleCheckAllChange")
-            i(:class="[is]")
-        .scroll-wrapper
-            .list-area
-                el-checkbox-group(v-model="checkedImgUrls")
-                    el-checkbox(v-for="obj in imgUrls", :label="obj.src", class="img-wrap")
-                        div.img-wrap(:style="obj.style")
         iframe#hidden-iframe(style="display: none")
 </template>
 
@@ -107,86 +114,139 @@
     #panel-download {
         position: relative;
         color: $color-light-gray;
-        .el-checkbox-group {
-            .el-checkbox__input {
-                position: absolute;
-                z-index: 10;
-                left: 0;
-                top: 0;
-            }
-            .el-checkbox__label {
-                font-size: 0;
-            }
-            .el-checkbox__inner {
-                background-color: transparent;
-                border: none;
-            }
-        }
-        .img-wrap {
-            transition: .2s background-size ease;
-            box-shadow: 0 0 34px rgba(0, 0, 0, .9) inset;
-            background-position: center;
-            &:hover {
-                background-size: 90% 90%;
-            }
-        }
-        .el-checkbox__label {
-            padding: 0;
-        }
     }
 </style>
 
 <style lang="sass" scoped> 
+    @import "../style/common";
+    .empty-list-view {
+        width: 60px;
+        height: 60px;
+        border-radius: 30px;
+        border: 1px solid transparent;
+        background-color: $color-dark-white;
+        margin: 30px auto;
+        line-height: 60px;
+        text-align: center;
+        .iconfont {
+            font-size: 30px;
+        }
+    }
+    .btn-wrap {
+        display: inline-block;
+        width: 65%;
+        margin: 0 5px;
+    }
     .top-area {
+        padding-bottom: 0;
         .el-icon-arrow-left {
             cursor: pointer;
         }
         .el-button {
             width: 100%;
         }
-        .header {
-            line-height: 30px;
-        }
     }
     .tool-bar {
-        line-height: 39px;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        background-color: rgba(50, 64, 87, .5);
-        right: 0;
-        z-index: 3;
+        text-align: center;
+        .iconfont-wrap {
+            margin: 5px;
+        }
     }
     
     .list-area {
-        .img-wrap {
+        column-count: 2;
+        column-gap: 5px;
+        padding: 5px;
+        .box {
+            position: relative;
+            backface-visibility: hidden;
+            transition: all .4s ease;
             display: inline-block;
-            box-sizing: border-box;
-            padding: 0;
-            width: 100%;
-            font-size: 0;
-            margin: 0;
-            background-repeat: no-repeat;
-            background-clip: border-box;
-            background-size: 100% 100%;
-            background-color: transparent;
-            background-attachment: scroll;
-            &::before {
-                font-family: 'iconfont';
-                content: "\E6A8";
-                display: block;
-                box-sizing: border-box;
+            padding: 5px 5px 0;
+            border: 1px solid #ccc;
+            box-sizing: content-box;
+            background-color: #fff;
+            margin-bottom: 5px;
+            cursor: pointer;
+            &:hover,
+            &:focus,
+            &:active {
+                transform: translateY(-5px);
+                background-color: $color-black;
+                * {
+                    color: $color-dark-white;
+                }
+                img {
+                    transform: scale(1.02) rotate(3deg);
+                }
+                &:before {
+                    opacity: 1;
+                    transform: translateY(3px);
+                }
+                .checked-tag {
+                    i {
+                        color: $color-dark-white;
+                    }
+                }
+            }
+            &:before {
+                pointer-events: none;
                 position: absolute;
                 z-index: -1;
-                left: 0;
-                font-size: 50px;
-                text-align: center;
-                width: 100%;
-                height: calc(100%);
-                background: #666;
+                content: '';
+                top: 100%;left: 5%;
+                height: 5px;
+                width: 90%;
+                opacity: 0;
+                background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 80%);
+                transition-duration: .3s;
+                transition-property: transform, opacity;
             }
-            &::hover {
-                box-shadow: 0 0 34px rgba(0, 0, 0, .9) inset;
+            .checked-tag {
+                position: absolute;
+                right: -2px;
+                bottom: -6px;
+                i {
+                    font-size: 20px;
+                    color: $color-black;
+                }
+            }
+            .pic {
+                position: relative;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    margin: 0 auto 5px;
+                    backface-visibility: hidden;
+                    transition: all .4s ease;
+                    &:before {
+                        content: '\e6db';
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        color: #333;
+                        background-color: #fff;
+                        text-align: center;
+                        font-family: "iconfont" !important;
+                        font-size: 30px;
+                        font-style: normal;
+                        -webkit-font-smoothing: antialiased;
+                        -moz-osx-font-smoothing: grayscale;
+                    }
+                }
+            }
+            strong {
+                display: inline-block;
+                color: #333;
+                white-space: nowrap;
+                overflow: hidden;
+                font-size: 10px;
+                line-height: 1.5;
+                text-overflow: ellipsis;
+                font-weight: normal;
             }
         }
     }

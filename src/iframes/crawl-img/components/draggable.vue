@@ -17,17 +17,26 @@
 		cursor: move;
 		user-select: none;
 	}
+	#draggable {
+		border: 1px solid transparent;
+		border-radius: 5px;
+		overflow: hidden;
+		background: #324057;
+		z-index: 999999999999999999;
+	}
 
 </style>
 <template lang="pug">
-	div
-		#draggable.ui-draggable(ref="draggable", @mousedown="handleMouseDown", @mousemove="handleMouseMove", :style="{top: pos.top + 'px', left: pos.left + 'px'}")
-			slot
+	#draggable.ui-draggable(ref="draggable", :style="{top: pos.top + 'px', left: pos.left + 'px'}", @mousedown="handleMouseDown", @mousemove="handleMouseMove")
+		slot
 
 </template>
 <script>
 	export default {
 		mounted() {
+			$(window).resize(e => {
+				this.resetMaxXY()
+			}).resize()
 			$(document).on('mouseup', e => {
 				this.isDraging = false
 			})
@@ -48,10 +57,16 @@
 				},
 				isDraging: false,
 				mouseOffsetX: 0,
-				mouseOffsetY: 0
+				mouseOffsetY: 0,
+				maxX: 0,
+				maxY: 0
 			}
 		},
 		methods: {
+			resetMaxXY() {
+				this.maxX = document.documentElement.clientWidth - this.$refs.draggable.offsetWidth
+				this.maxY = document.documentElement.clientHeight - this.$refs.draggable.offsetHeight
+			},
 			resetCurrentPos() {
 				const clientWidth = document.documentElement.clientWidth
 				const clientHeight = document.documentElement.clientHeight
@@ -71,13 +86,13 @@
 				if(this.isDraging) {
 					const mouseX = e.pageX
 					const mouseY = e.pageY
+
 					let moveX = mouseX - this.mouseOffsetX
 					let moveY = mouseY - this.mouseOffsetY
+					
+					moveX = Math.min(this.maxX, Math.max(0, moveX))
+					moveY = Math.min(this.maxY, Math.max(0, moveY))
 
-					const maxX = document.documentElement.clientWidth - this.$refs.draggable.offsetWidth
-					const maxY = document.documentElement.clientHeight - this.$refs.draggable.offsetHeight
-					moveX = Math.min(maxX, Math.max(0, moveX))
-					moveY = Math.min(maxY, Math.max(0, moveY))
 					this.pos.left = moveX
 					this.pos.top = moveY
 				}

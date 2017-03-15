@@ -10,6 +10,16 @@
     } from 'vuex'
 
     export default {
+        data () {
+            return {
+                cssSelectorText: ''
+            }
+        },
+        components: {
+            'search-input': (resolve, reject) => {
+                resolve(require('./search-input'))
+            }
+        },
         computed: {
             ...mapGetters([
                 'isExpanded',
@@ -48,27 +58,30 @@
     #panel-search
         .top-area
             .header
-                .logo Image Crawler
+                .logo 爬取网页图片
                 ul.tools.clearfix
                     li
-                        i(:class="[isExpanded ? 'el-icon-arrow-up' : 'el-icon-arrow-down']", @click="handleArrowClicked")
+                        span.iconfont-wrap
+                            i(:class="[isExpanded ? 'el-icon-arrow-up' : 'el-icon-arrow-down']", @click="handleArrowClicked")
                     li
-                        i.el-icon-time(@click.stop.prevent="handHisClicked")
-            el-input(placeholder="输入 css 选择器，比如: img", icon="search")
+                        span.iconfont-wrap
+                            i.el-icon-time(@click.stop.prevent="handHisClicked")
+            search-input
         .his-list-content.list-area(v-if="isExpanded")
             .his-label 历史记录
             ul.list-wrap-selectors
-                li(v-for="selector of hisList" @click="triggerCrawl(selector.cssSelector, $event)")
+                li(v-for="selector of hisList", @click="triggerCrawl(selector.cssSelector)")
                     p {{selector.cssSelector}}
-                    p {{selector.hostname}}
-                    i(:key="selector.id" @click.stop="starOrNot(selector, $event)" v-bind:class="[selector.isCollected ? 'el-icon-star-on' : 'el-icon-star-off']")
+                    span.iconfont-wrap
+                        i(:key="selector.id", @click.stop="starOrNot(selector, $event)", v-bind:class="[selector.isCollected ? 'el-icon-star-on' : 'el-icon-star-off']")
 </template>
 
 <style lang="sass" scoped>
     @import "../style/common";
     .header {
+        overflow: hidden;
         line-height: 40px;
-        font-size: 18px;
+        font-size: 14px;
         .logo {
             float: left;
             color: $color-white;
@@ -96,43 +109,40 @@
             font-size: 14px;
             color: $color-light-gray;
             line-height: 40px;
-            text-align: center;
         }
         .list-wrap-selectors {
-            color: $color-silver;
+            color: $color-gray;
             li {
-                background: $color-black;
-                border-radius: 3px;
-                padding: 5px;
                 position: relative;
-                overflow: hidden;
                 user-select: none;
                 cursor: pointer;
-                padding: 16px;
-                margin-bottom: 5px;
-                &:active {
-                    box-shadow: 3px -2px 3px $color-gray;
+                padding: 0;
+                margin-bottom: 20px;
+                transition: all .4s ease;
+                &:hover {
+                    transform: translateY(-3px);
                 }
                 p {
+                    width: 80%;
                     padding: 0;
                     margin: 0;
                     white-space: nowrap;
                     text-overflow: ellipsis;
-                    font-size: 12px;
+                    font-size: 14px;
                     overflow: hidden;
                     &:nth-child(2) {
-                    font-size: 10px;
-                    margin: 5px 0;
+                        font-size: 10px;
+                        margin: 5px 0;
                     }
                 }
-                i {
+                .iconfont-wrap {
                     position: absolute;
                     top:50%;
                     right: 10px;
                     transform: translateY(-50%);
                     transition: 1s filter;
                     &:hover {
-                    filter: drop-shadow(0px 3px 2px rgba(0, 0, 0, 1));
+                        filter: drop-shadow(0px 3px 2px rgba(0, 0, 0, 1));
                     }
                 }
             }

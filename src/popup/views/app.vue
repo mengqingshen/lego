@@ -1,38 +1,102 @@
-<template lang="pug">
-    #app
-        el-menu(mode="vertical")
-            el-menu-item-group(title="爬虫")
-                el-menu-item(index="1")
-                    div(@click="showCrawlWindow")
-                        i.el-icon-picture
-                        span 图片爬取工具
-
-</template>
-
 <script>
-export default {
-    methods: {
-        showCrawlWindow () {
-            chrome.extension.sendRequest(null, {
-                command: 'showCrawlWindow'
-            })
+    export default {
+        data () {
+            return {
+                toolDownPic: {
+                    disabled: false,
+                    created: false
+                }
+            }
+        },
+        created () {
+            this.ping()
+        },
+        methods: {
+            ping () {
+                if (chrome.tabs.getSelected) {
+                    chrome.tabs.getSelected(null, tab => {
+                        chrome.tabs.sendRequest(tab.id, {
+                            command: 'howareyou'
+                        }, res => {
+                            if (res === 'fine') {
+                                this.toolDownPic.created = true
+                                this.toolDownPic.disabled = true
+                            }
+                            else if (res === 'hidden') {
+                                this.toolDownPic.disabled = false
+                            }
+                        })
+                    })
+                }
+            },
+            showCrawlWindow () {
+                console.log(this.$data)
+                if (!this.toolDownPic.disabled) {
+                    if (this.toolDownPic.created) {
+                        chrome.tabs.getSelected(null, tab => {
+                            chrome.tabs.sendRequest(tab.id, {
+                                command: 'show-crawl-window'
+                            }, res => {
+                                this.ping()
+                            })
+                        })
+                    }
+                    else {
+                        chrome.extension.sendRequest(null, {
+                            command: 'create-craw-window'
+                        }, res => {
+                            this.ping()
+                        })
+                    }
+                }
+            }
         }
     }
-}
 </script>
+
+<template lang="pug">
+    #app
+        table.app-entry-wrap
+            tr
+                td
+                    div.trans.bdc.tc.app-entry(:class="{'disabled': toolDownPic.disabled}", @click="showCrawlWindow")
+                        div
+                            i.iconfont.icon-tupian
+                        strong 下载图片
+</template>
 
 <style lang="sass">
     body {
-        margin: 0;
-        padding: 0;
-        font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-        height: 450px;
-        margin: 0 auto;
+        width: 300px;
+        margin: auto;
     }
+    .app-entry-wrap {
+        margin: 30px auto;
+    }
+    .app-entry {
+        border: 1px solid ;
+        position: relative;
+        height: 90px;
+        width: 90px;
+        border-radius: 3px;
+        cursor: pointer;
+        &:hover {
+            box-shadow: 0 0 5px #999;
+        }
+        &.disabled {
+            cursor: not-allowed;
+            pointer-events: none;
+            color: #999;
+        }
 
-    ul,li {
-        list-style: none;
-        padding: 0;
-        margin: 0;
+        i.iconfont {
+            font-size: 50px;
+        }
+        strong {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
     }
 </style>
