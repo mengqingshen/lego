@@ -1,0 +1,31 @@
+{
+  "manifest_version":2,
+  "name":"SeanWay",
+  "version":"0.0.0",
+  "description":"个人的工具箱",
+  "browser_action":{
+    "default_icon":"assets/way.png",
+    "default_popup":"popup/index.html"
+  },
+  "author": "mengqingshen",
+  "permissions":[
+    "storage",
+    "background",
+    "activeTab",
+    "tabs",
+    "unlimitedStorage",
+    "http://*/**",
+    "https://*/*"
+  ],
+  "background":{
+    "page": "background/index.html"
+  },
+  "icons": {
+      "48": "assets/way.png"
+   },
+  "content_scripts":[],
+  "web_accessible_resources": [
+    "iframes/crawl-img/index.html",
+    "chunks/*.js"
+  ]
+}

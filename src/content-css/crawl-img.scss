@@ -1,0 +1,28 @@
+@import '../common/style/common';
+#seanway-crawl-window {
+    .img-wrap {
+        width: 20px;
+        text-align: center;
+        height: 20px;
+        line-height: 20px;
+        display: inline-block;
+        border-radius: 10px;
+        transition: all .4s ease;
+        cursor: pointer;
+        background: $color-black;
+        &:hover {
+            background: $color-white;
+            img {
+                filter: invert(0%);
+            }
+        }
+        img {
+            filter: invert(100%);
+            width: 80%;
+            display: inline-block;
+            vertical-align: middle;
+            height: 80%;
+        }
+    }
+
+}

@@ -1,0 +1,26 @@
+@import "./_variable";
+.clearfix {
+	*zoom: 1;
+}
+.clearfix:before {
+	display: table;
+	content: '';
+}
+.clearfix:after {
+	clear: both;
+}
+.iconfont-wrap {
+	display: inline-block;
+	line-height: 30px;
+	height: 30px;
+	width: 30px;
+	text-align: center;
+	border-radius: 15px;
+	transition: all .4s ease;
+	&:hover {
+		background-color: $color-dark-white;
+		i {
+			color: $color-black;
+		}
+	}
+}
