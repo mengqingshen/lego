@@ -49,7 +49,7 @@ class Crawler {
                 }
                 setTimeout(() => {
                     download(count++)
-                }, 100)
+                }, 200)
             }
             function download(count) {
                 let uri = checkedImgs[count].uri
