@@ -104,8 +104,7 @@ module.exports = {
                             limit: 10000
                         }
                     }
-                ],
-                include: /assets/
+                ]
             }
         ]
     },
@@ -118,6 +117,10 @@ module.exports = {
         new CopyWebpackPlugin([
             {
                 from: 'manifest.json'
+            },
+            {
+                from: 'assets/way.png',
+                to: 'assets/way.png'
             }
         ]),
         new ExtractTextPlugin({
