@@ -92,19 +92,20 @@ module.exports = {
                             name: 'assets/[name].[ext]?[hash]'
                         }
                     }
-                ]
-                
+                ],
+                exclude: /content-script\/assets/
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?\S*)?$/,
                 use: [
                     {
-                        loader: 'file-loader',
+                        loader: 'url-loader',
                         options: {
-                            name: 'assets/[name].[ext]?[hash]'
+                            limit: 10000
                         }
                     }
-                ]
+                ],
+                include: /assets/
             }
         ]
     },

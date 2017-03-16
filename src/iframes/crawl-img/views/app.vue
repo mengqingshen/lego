@@ -52,7 +52,7 @@
 </template>
 
 <style lang="sass">
-    @import "../style/common";
+    @import "../../../common/style/common";
     body {
         margin: 0;
         padding: 0;

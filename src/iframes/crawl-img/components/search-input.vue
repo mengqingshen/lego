@@ -37,7 +37,7 @@
 		//- el-tooltip(placement="top-end", :disabled="toolTipDisabled", content="不能为空", effect="light")
 		div(class="search-input")
 			i.el-icon-search(@click="handleSearch")
-			input(type="text", placeholder="css 选择器", autocomplete="off", @keyup.enter="handleSearch", v-model.trim="cssSelectorText", @input="handleInput")
+			input(type="text", placeholder="css 选择器", autocomplete="off", autofocus="autofocus" @keyup.enter="handleSearch", v-model.trim="cssSelectorText", @input="handleInput")
 </template>
 
 <style lang="sass" scoped>

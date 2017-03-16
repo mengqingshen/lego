@@ -7,6 +7,7 @@
 	export default {
 		data() {
 			return {
+				mask: true,
 				show: false,
 				style: {width: '220px', height: '100px'},
 				src: chrome.extension.getURL('iframes/crawl-img/index.html')
@@ -47,6 +48,9 @@
 			})
 		},
 		methods: {
+			triggerMask () {
+				this.mask = !this.mask
+			},
 			crawl (cssSelector) {
 				return crawler.getImgUrlsByCSSSelector(cssSelector)
 			},
@@ -64,22 +68,25 @@
 </script>
 
 <template lang="pug">
-	draggable
-		transition(name="slide-fade")
-			#seanway-crawl-window(v-show="show")
-				div(class="top-bar")
-					span(class="icon-span", @click="hideCrawlWindow")
-						svg(width="10", height="10", viewBox="0 0 10 10")
-							line(x1="0", y1="0", x2="10", y2="10", stroke="#D3DCE6")
-							line(x1="10", y1="0", x2="0", y2="10", stroke="#D3DCE6")
-				iframe(
-					:src="src",
-					frameborder="0",
-					seamless="seamless",
-					scrolling="no",
-					id="seanway-iframe",
-					:style="{width: this.style.width, height: this.style.height}"
-				)
+	div
+		#seayway-mask(v-show="mask && show")
+		draggable
+			transition(name="slide-fade")
+				#seanway-crawl-window(v-show="show")
+					.top-bar
+						span.img-wrap(@click="triggerMask")
+							img(v-show="mask", src="../assets/umbrella.png")
+							img(v-show="!mask", src="../assets/si-glyph-umbrella-close.png")
+						span.img-wrap(@click="hideCrawlWindow")
+							img(src="../assets/close.png")
+					iframe(
+						:src="src",
+						frameborder="0",
+						seamless="seamless",
+						scrolling="no",
+						id="seanway-iframe",
+						:style="{width: this.style.width, height: this.style.height}"
+					)
 </template>
 
 <style scoped>
@@ -96,25 +103,27 @@
 </style>
 
 <style lang="sass">
+	#seayway-mask {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: rgba(0, 0, 0, .3);
+		z-index: 999;
+	}
 	#seanway-iframe {
 		cursor: auto;
-		filter: drop-shadow(0px 0px 10px #000);
 	}
 	#seanway-crawl-window {
 		.top-bar {
+			font-size: 0;
 			text-align: right;
 			color: #D3DCE6;
-			background:white;
-			.icon-span {
-				display: inline-block;
-				height: 20px;
-				line-height: 20px;
-				width: 20px;
-				cursor: pointer;
-				text-align: center;
-				svg {
-					vertical-align: middle;
-				}
+			background: transparent;
+			margin-bottom: 3px;
+			.img-wrap {
+				margin-left: 5px;
 			}
 		}
 	}

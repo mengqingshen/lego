@@ -25,21 +25,21 @@
             this.initIScroll()
         },
         watch: {
+            isGrid (value) {
+                this.refreshIScroll()
+            },
+
             // 如果列表长度发生变化就更新 IScroll
             imgUris (value, oldValue) {
                 if(value.length !== oldValue.length) {
-                    if(this.listScroll) {
-                        Vue.nextTick(() => {    
-                            this.listScroll.refresh()
-                        })
-                    }
-                    else {
-                        this.initIScroll()
-                    }
+                    this.refreshIScroll()
                 }
             }
         },
         computed: {
+            columnCount () {
+                return this.isGrid ? 2 : 1
+            },
             ...mapGetters([
                 'isPreviewDownload',
                 'isGrid',
@@ -52,6 +52,16 @@
             ])
         },
         methods: {
+            refreshIScroll () {
+                if(this.listScroll) {
+                    Vue.nextTick(() => {    
+                        this.listScroll.refresh()
+                    })
+                }
+                else {
+                    this.initIScroll()
+                }
+            },
             handlePicClicked () {
 
             },
@@ -94,7 +104,7 @@
                 span.iconfont-wrap
                     i.iconfont(:class="[isGrid ? 'icon-viewgrid' : 'icon-viewlist']", @click="handleClickPreviewType")
         .scroll-wrapper(v-show="isPreviewDownload")
-            .list-area(v-if="imgUris.length > 0")
+            .list-area(v-if="imgUris.length > 0", :style="{ columnCount: columnCount}")
                 .box-wrap(v-for="img in imgUris", @click="handleCheck(img.uri)")
                     .box
                         .checked-tag
@@ -110,7 +120,7 @@
 </template>
 
 <style lang="sass">
-    @import "../style/common";
+    @import "../../../common/style/common";
     #panel-download {
         position: relative;
         color: $color-light-gray;
@@ -118,7 +128,7 @@
 </style>
 
 <style lang="sass" scoped> 
-    @import "../style/common";
+    @import "../../../common/style/common";
     .empty-list-view {
         width: 60px;
         height: 60px;
@@ -154,7 +164,6 @@
     }
     
     .list-area {
-        column-count: 2;
         column-gap: 5px;
         padding: 5px;
         .box {

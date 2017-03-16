@@ -77,7 +77,7 @@
 </template>
 
 <style lang="sass" scoped>
-    @import "../style/common";
+    @import "../../../common/style/common";
     .header {
         overflow: hidden;
         line-height: 40px;

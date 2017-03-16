@@ -1,31 +1,3 @@
-<style lang="sass" scoped>
-	.ui-mask {
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		width: 100%;
-		height: 100%;
-		background-color: #000;
-		opacity: 0.4;
-		filter: Alpha(opacity=40);
-		user-select: none;
-	}
-	.ui-draggable {
-		position: fixed;
-		cursor: move;
-		user-select: none;
-	}
-	#draggable {
-		border: 1px solid transparent;
-		border-radius: 5px;
-		overflow: hidden;
-		background: transparent;
-		z-index: 999999999999999999;
-	}
-
-</style>
 <template lang="pug">
 	#draggable.ui-draggable(ref="draggable", :style="{top: pos.top + 'px', left: pos.left + 'px'}", @mousedown="handleMouseDown", @mousemove="handleMouseMove")
 		slot
@@ -94,3 +66,30 @@
 		}
 	}
 </script>
+<style lang="sass" scoped>
+	.ui-mask {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #000;
+		opacity: 0.4;
+		filter: Alpha(opacity=40);
+		user-select: none;
+	}
+	.ui-draggable {
+		position: fixed;
+		cursor: move;
+		user-select: none;
+	}
+	#draggable {
+		border: 1px solid transparent;
+		border-radius: 5px;
+		overflow: hidden;
+		background: transparent;
+		z-index: 999999999999999999;
+	}
+</style>

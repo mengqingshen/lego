@@ -50,6 +50,7 @@
     "sass-loader": "^3.2.3",
     "scss-loader": "0.0.1",
     "style-loader": "^0.13.1",
+    "url-loader": "^0.5.8",
     "vue-loader": "^11.1.2",
     "vue-style-loader": "^1.0.0",
     "webpack": "^2.2.1",

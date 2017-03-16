@@ -8,7 +8,7 @@ import * as types from '../mutation-types'
  */ 
 const state = {
     isGrid: true,
-    isPreviewDownload: false,
+    isPreviewDownload: true,
     isExpanded: false,
     activeTabName: 'collected', // recommand, collected
     lastPanel: 'collection',
@@ -34,11 +34,15 @@ const getters = {
     isGrid: state => state.isGrid,
     isPreviewDownload: state => state.isPreviewDownload,
     imgWidth: state => state.imgWidth,
-    imgUris: state => state.imgs.filter(([key, value]) => !value.downloaded).map(([uri, { w, h, checked }]) => {
+    imgUris: state => state.imgs.filter(([key, value]) => !value.downloaded).map(([uri, { w, h, checked, longdesc }]) => {
+        h = h === 0 ? 30 : h
+        if (longdesc) {
+            longdesc = longdesc.replace('./', '')
+        }
         const height = ~~(h / w * state.imgWidth) + 'px'
         const width = state.imgWidth + 'px'
         return {
-            picName: uri.split('/').pop().split('?')[0],
+            picName: longdesc|| uri.split('/').pop().split('?')[0],
             uri,
             w,
             h,
@@ -114,10 +118,10 @@ const actions = {
     },
 
     /* 点击下载 */
-    handleDownloadClicked ({ commit, state }) {
-        const imgSrcs = state.imgs.filter(([key, value]) => value.checked && !value.downloaded).map(([key, value]) => key)
-        crawler.downloadImgBySrc(imgSrcs).then(() => {
-            commit(types.FINISH_DOWNLOAD, imgSrcs)
+    handleDownloadClicked ({ commit, getters }) {
+        const checkedImgs = getters.imgUris.filter(({ checked }) => checked)
+        crawler.downloadImgBySrc(checkedImgs).then(() => {
+            commit(types.FINISH_DOWNLOAD)
         })
     },
 
@@ -170,6 +174,12 @@ const actions = {
 const mutations = {
     [types.TRIGGER_PREVIEW_TYPE] (state) {
         state.isGrid = !state.isGrid
+        if (state.isGrid) {
+            state.imgWidth = 90
+        }
+        else {
+            state.imgWidth = 198
+        }
     },
     [types.TRIGGER_EXPAND] (state) {
         state.isExpanded = !state.isExpanded

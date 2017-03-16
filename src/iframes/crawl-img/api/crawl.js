@@ -11,7 +11,7 @@ class Crawler {
      * @returns{array} 找到的所有图片的 URL 组成的数组
      */
     getImgUrlsByCSSSelector (cssSelector) {
-        const imgDoms = $(cssSelector)
+        const imgDoms = $(cssSelector + ':not(#seanway-crawl-window img)')
         if(imgDoms) {
             return Array.from(imgDoms).map(function(img) {
                 return [
@@ -20,7 +20,8 @@ class Crawler {
                         w: img.naturalWidth,
                         h: img.naturalHeight,
                         checked: true,
-                        downloaded: false
+                        downloaded: false,
+                        longdesc: img.getAttribute('longdesc') || null
                     }
                 ]
             })
@@ -31,21 +32,38 @@ class Crawler {
     /**
      * 批量下载图片到本地
      * 
-     * @param{array} imgSrcs 需要下载的图片链接
+     * @param{array} imgSrcs 需要下载的图片信息
      */
 
-    downloadImgBySrc(imgSrcs) {
+    downloadImgBySrc(checkedImgs) {
         const a = document.createElement('a')
         a.setAttribute('download', '')
         
-        const evObj  = document.createEvent('MouseEvents')
-        evObj.initMouseEvent( 'click', true, true, window, 0, 0, 0, 0, 0, false, false, true, false, 0, null)
+        let count = 0
+
         return new Promise((resolve, reject) => {
-            imgSrcs.forEach(src => {
-                a.setAttribute('href',src)
+            a.onclick = () => {
+                if (count === checkedImgs.length) {
+                    resolve()
+                    return
+                }
+                setTimeout(() => {
+                    download(count++)
+                }, 100)
+            }
+            function download(count) {
+                let uri = checkedImgs[count].uri
+                const match = uri.match(/(https?)/)
+                if (match && match.length === 2) {
+                    uri = match[1] + uri.split(match[1]).pop()
+                }
+                a.setAttribute('href', uri)
+                a.setAttribute('download', checkedImgs[count].picName)
+                const evObj  = document.createEvent('MouseEvents')
+                evObj.initMouseEvent( 'click', true, true, window, 0, 0, 0, 0, 0, false, false, true, false, 0, null)        
                 a.dispatchEvent(evObj)
-            })
-            resolve()
+            }
+            download(count++)
         })
     }
 }
