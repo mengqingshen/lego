@@ -22,6 +22,7 @@ const state = {
         ['http://tu.zmzjstu.com/ftp/2017/0302/s_daa4b2a8467bea662b446f4e9f961d74.jpg', { w: 100, h: 61, checked: true, downloaded: false}],
         ['http://tu.zmzjstu.com/ftp/2017/0303/s_357a3b63cce671824f21585d4c69519a.jpg', { w: 100, h: 66, checked: true, downloaded: false}],
         ['http://tu.zmzjstu.com/ftp/2017/0302/s_e57cc049cd712ffb82a703cbc1c0bd92.jpg', { w: 100, h: 50, checked: true, downloaded: false}],
+        ['blob:https://maxiang.io/770bd6f1-0fa2-4ae4-b7ff-cf2724f2b2a3', { w: 100, h: 50, checked: true, downloaded: false}],
         ['http://tu.zmzjstu.com/ftp/2017/0302/s_8bb968c1fc3937e4b33b0b70fa90b779.jpg', { w: 100, h: 46, checked: true, downloaded: false}]
     ],
     imgWidth: 90

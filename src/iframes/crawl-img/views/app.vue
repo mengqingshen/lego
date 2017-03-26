@@ -4,7 +4,7 @@
         mapGetters
     } from 'vuex'
     import $ from 'expose-loader?$!jquery'
-    import '../lib/jquery.ba-resize.js'
+    import '../../../lib/jquery.ba-resize.js'
     export default {
         mounted () {
             $('#window-for-crawl').resize(e => {
