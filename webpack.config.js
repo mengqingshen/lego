@@ -75,7 +75,15 @@ module.exports = {
                 test: /\.s[a|c]ss$/,
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
-                    use: ['css-loader', 'sass-loader'],
+                    use: [
+                        {
+                            loader: 'css-loader',
+                            options: {
+                            }
+                        },
+                        'postcss-loader',
+                        'sass-loader'
+                    ],
                     publicPath: "/dist"
                 })
             },

@@ -48,7 +48,7 @@
 </template>
 
 <style lang="sass">
-@import "../../../common/style/common";
+@import "../../../common/style/modules/_element-colors";
 #panel-collection {
     background-color: $color-black;
     color: $color-light-gray;

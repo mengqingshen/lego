@@ -1,0 +1,21 @@
+.seanway-btn {
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	outline: none;
+	color: $color-light-black;
+	background-color: $color-gray;
+	transition: all .5s ease;
+	&:hover,
+	&:active,
+	&:focus {
+		color: $color-gray;
+		background-color: $color-light-black;
+	}
+}
+
+.seanway-btn-tiny {
+	line-height: 1.3;
+	font-size: 12px;
+	padding: 0 3px;
+}

@@ -6,7 +6,8 @@
 		data () {
 			return {
 				cssSelectorText: '',
-				toolTipDisabled: true
+				toolTipDisabled: true,
+				advanced: false,
 			}
 		},
 		methods: {
@@ -16,12 +17,20 @@
 				]
 			),
 			handleSearch (e) {
-				if (this.cssSelectorText === '') {
-					this.toolTipDisabled = false
-					return
+				if (this.advanced) {
+					if (this.cssSelectorText === '') {
+						this.toolTipDisabled = false
+						return
+					}
+					this.triggerCrawl(this.cssSelectorText)
+					this.toolTipDisabled = this.cssSelectorText !== ''
 				}
-				this.triggerCrawl(this.cssSelectorText)
-				this.toolTipDisabled = this.cssSelectorText !== ''
+				else {
+					this.advanced = true
+				}
+			},
+			handleStart () {
+				this.triggerCrawl()
 			},
 			handleInput () {
 				if (this.cssSelectorText !== '') {
@@ -33,69 +42,81 @@
 </script>
 
 <template lang="pug">
-	div
-		//- el-tooltip(placement="top-end", :disabled="toolTipDisabled", content="不能为空", effect="light")
-		div(class="search-input")
+	div.search-input-wrap
+		span.iconfont-wrap.search-submit
 			i.el-icon-search(@click="handleSearch")
-			input(type="text", placeholder="css 选择器", autocomplete="off", autofocus="autofocus" @keyup.enter="handleSearch", v-model.trim="cssSelectorText", @input="handleInput")
+		//- el-tooltip(placement="top-end", :disabled="toolTipDisabled", content="不能为空", effect="light")
+		transition(
+			name="move",
+			mode="out-in")
+			div(:key="advanced ? 'on' : 'off'")
+				input#search-input(
+					v-show="advanced",
+					type="text",
+					placeholder="css 选择器",
+					autocomplete="off",
+					autofocus="autofocus",
+					@keyup.enter="handleSearch",
+					v-model.trim="cssSelectorText",
+					@input="handleInput")
+				input#crawl-all-imgs.seanway-btn(
+					v-show="!advanced",
+					type="button",
+					@click="handleStart",
+					value="开始(全部)")
+				
+
 </template>
 
 <style lang="sass" scoped>
-	.search-input {
+	@import "../../../common/style/modules/_element-colors";
+	.move-enter,
+	.move-enter-active,
+	.move-leave-active {
+		transition: all .5s ease;
+	}
+	.move-enter {
+		transform: translateX(20px);
+		opacity: 0;
+	}
+	.move-leave-active {
+		transform: translateX(-20px);
+		opacity: 0;
+	}
+	.search-input-wrap {
 		position: relative;
 		font-size: 14px;
 		display: inline-block;
 		width: 100%;
 		margin-top: 5px;
 		user-select: none;
-		i {
-			font-family: element-icons!important;
-			speak: none;
-			font-style: normal;
-			font-weight: 400;
-			font-variant: normal;
-			text-transform: none;
-			line-height: 1;
-			vertical-align: baseline;
-			display: inline-block;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
+		.search-submit {
 			position: absolute;
-			width: 35px;
-			height: 100%;
 			right: 0;
+			bottom: 0;
 			top: 0;
-			text-align: center;
-			color: #bfcbd9;
-			transition: all .3s;
-			&:before {
-				content: "\E61D"
-			}
-			&:after {
-				content: '';
-				height: 100%;
-				width: 0;
-				display: inline-block;
-				vertical-align: middle;
-			}
+			margin: auto;
+			z-index: 1;
 		}
-		input {
+
+		#crawl-all-imgs {
+		    width: calc(100% - 39px);
+			line-height: 36px;
+			font-size: 13px;
+			padding: 0;
+		}
+		#search-input {
 			padding-right: 35px;
 			appearance: none;
-			-moz-appearance: none;
-			-webkit-appearance: none;
 			outline: 0;
-			background-color: #fff;
-			border-radius: 4px;
-			border: 1px solid #bfcbd9;
-			color: #1f2d3d;
-			display: block;
-			font-size: inherit;
+			background-color: transparent;
+			border: 0 solid transparent;
+			color: $color-gray;
 			height: 36px;
-			line-height: 1;
+			line-height: 36px;
 			padding: 3px 10px;
 			transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
-			width: 210px;
+			width: calc(100 - 26px);
 			background-image: none;
 			box-sizing: border-box;
 		}

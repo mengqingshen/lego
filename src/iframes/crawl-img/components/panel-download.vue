@@ -1,8 +1,7 @@
 /*
-* @fileoverview 收藏列表
+* @fileoverview 下载列表
 * @author sean(eli01linux@aliyun.com)
 */
-
 
 <script>
     import Vue from 'vue'
@@ -11,9 +10,10 @@
         mapGetters,
         mapActions
     } from 'vuex'
+    import IScroll from 'iscroll'
+    import Velocity from 'velocity-animate'
 
     import * as types from '../store/mutation-types'
-    import IScroll from 'iscroll'
     export default {
         beforeDestore () {
             if(this.listScroll) {
@@ -41,6 +41,7 @@
                 return this.isGrid ? 2 : 1
             },
             ...mapGetters([
+                'isDownloadSearchMode',
                 'isPreviewDownload',
                 'isGrid',
                 'checkAll',
@@ -76,6 +77,8 @@
                 }
             },
             ...mapActions([
+                'handleTriggerSearchMode',
+                'handleSearchWithinDownload',
                 'handleCheck',
                 'handleClickPreviewType',
                 'handleCheckedMass',
@@ -98,11 +101,24 @@
                         i.iconfont.icon-icondownload.icon-base
                 span.iconfont-wrap
                     i.iconfont(:class="[isPreviewDownload ? 'icon-eye' : 'icon-hide']", @click="handlePreviewClicked")
-            .tool-bar(v-show="isPreviewDownload")
-                span.iconfont-wrap
-                    i.iconfont(:class="{ 'icon-quanxuan': checkAll, 'icon-qudiaoquanxuan': checkAllOff, 'icon-qudiaoquanxuan1': checkSome}", @click="handleCheckedMass")
-                span.iconfont-wrap
-                    i.iconfont(:class="[isGrid ? 'icon-viewgrid' : 'icon-viewlist']", @click="handleClickPreviewType")
+            transition(
+                :key="isDownloadSearchMode ? 'search-mode' : 'normal-mode'",
+                name="t-slide-fade")
+                .tool-bar(
+                    v-show="isPreviewDownload",
+                    :class="{'m-search-mode-active': isDownloadSearchMode}")
+                    span.iconfont-wrap
+                        i.iconfont(:class="{ 'icon-quanxuan': checkAll, 'icon-qudiaoquanxuan': checkAllOff, 'icon-qudiaoquanxuan1': checkSome}", @click="handleCheckedMass")
+                    span.iconfont-wrap
+                        i.iconfont(:class="[isGrid ? 'icon-viewgrid' : 'icon-viewlist']", @click="handleClickPreviewType")
+                    .search-within-download
+                        span.iconfont-wrap
+                            i.iconfont(class="icon-search", @click="handleTriggerSearchMode")
+                        .search-within-download-bar(
+                            v-if="isDownloadSearchMode",
+                            @click="handleSearchWithinDownload")
+                            input(type="search", autofocus, placeholder="输入正则进行匹配")
+                            button.seanway-btn.seanway-btn-tiny 查找
         .scroll-wrapper(v-show="isPreviewDownload")
             .list-area(v-if="imgUris.length > 0", :style="{ columnCount: columnCount}")
                 .box-wrap(v-for="img in imgUris", @click="handleCheck(img.uri)")
@@ -120,15 +136,16 @@
 </template>
 
 <style lang="sass">
-    @import "../../../common/style/common";
+    @import "../../../common/style/modules/_element-colors";
     #panel-download {
         position: relative;
         color: $color-light-gray;
     }
 </style>
 
-<style lang="sass" scoped> 
-    @import "../../../common/style/common";
+<style lang="sass" scoped>
+    @import "../../../common/style/modules/_element-colors";
+    @import "../../../common/style/modules/_sizes";
     .empty-list-view {
         width: 60px;
         height: 60px;
@@ -157,9 +174,39 @@
         }
     }
     .tool-bar {
-        text-align: center;
+        white-space: nowrap;
+        margin-left: 45px;
+        transition: margin-left .5s ease-in-out;
+        &.m-search-mode-active {
+            margin-left: $search-within-download-margin-left;
+            > span {
+                transform: scale(0);
+            }
+            .search-within-download > span {
+                transform: scale(.7);
+            }
+        }
         .iconfont-wrap {
+            transition: transform .5s ease-in-out;
             margin: 5px;
+        }
+        .search-within-download {
+            display: inline-block;
+            .search-within-download-bar {
+                display: inline-block;
+                input[type="search"] {
+                    width: 120px;
+                    color: $color-gray;
+                    appearance: none;
+                    border: none;
+                    background: transparent;
+                    border-bottom: 1px solid $color-gray;
+                    outline: none;
+                }
+                button {
+                    margin-left: 16px;
+                }
+            }
         }
     }
     

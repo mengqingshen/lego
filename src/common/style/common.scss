@@ -1,4 +1,6 @@
-@import "./_variable";
+@import "./partials/_variables";
+@import "./partials/_buttons";
+
 .clearfix {
 	*zoom: 1;
 }
@@ -16,7 +18,10 @@
 	width: 30px;
 	text-align: center;
 	border-radius: 15px;
-	transition: all .4s ease;
+	transition:  background-color .4s ease;
+	i {
+		color: $color-gray;
+	}
 	&:hover {
 		background-color: $color-dark-white;
 		i {

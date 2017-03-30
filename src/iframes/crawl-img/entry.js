@@ -10,6 +10,7 @@ import store from './store'
 
 import '../../content-css/crawl-img.scss'
 import '../../assets/iconfont/iconfont.css'
+import '../../common/style/common.scss'
 
 Vue.use(ElementUI)
 

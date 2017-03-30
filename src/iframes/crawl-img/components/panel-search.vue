@@ -77,14 +77,14 @@
 </template>
 
 <style lang="sass" scoped>
-    @import "../../../common/style/common";
+    @import "../../../common/style/modules/_element-colors";
     .header {
         overflow: hidden;
         line-height: 40px;
         font-size: 14px;
         .logo {
             float: left;
-            color: $color-white;
+            color: $color-gray;
             user-select: none;
         }
         .tools {

@@ -7,6 +7,8 @@ import * as types from '../mutation-types'
  * initial state
  */ 
 const state = {
+    isDownloadSearchMode: false,
+    defaultSelectorText: 'img',
     isGrid: true,
     isPreviewDownload: true,
     isExpanded: false,
@@ -17,13 +19,13 @@ const state = {
     selectorsCollection: crawl.getSelectorsCollected() || [],
     selectorsRecommanded: crawl.getSelectorsRecommanded() || [],
     imgs: [
-        ['http://tu.zmzjstu.com/ftp/2017/0206/b_eeb77cea52c6472865f623a26865c185.jg', { w: 100, h: 61, checked: true, downloaded: false}],
-        ['http://tu.zmzjstu.com/ftp/2017/0302/s_8bb968c1fc3937e4b33b0b70fa90b779.jg', { w: 100, h: 46, checked: true, downloaded: false}],
-        ['http://tu.zmzjstu.com/ftp/2017/0302/s_daa4b2a8467bea662b446f4e9f961d74.jpg', { w: 100, h: 61, checked: true, downloaded: false}],
-        ['http://tu.zmzjstu.com/ftp/2017/0303/s_357a3b63cce671824f21585d4c69519a.jpg', { w: 100, h: 66, checked: true, downloaded: false}],
-        ['http://tu.zmzjstu.com/ftp/2017/0302/s_e57cc049cd712ffb82a703cbc1c0bd92.jpg', { w: 100, h: 50, checked: true, downloaded: false}],
-        ['blob:https://maxiang.io/770bd6f1-0fa2-4ae4-b7ff-cf2724f2b2a3', { w: 100, h: 50, checked: true, downloaded: false}],
-        ['http://tu.zmzjstu.com/ftp/2017/0302/s_8bb968c1fc3937e4b33b0b70fa90b779.jpg', { w: 100, h: 46, checked: true, downloaded: false}]
+        ['http://tu.zmzjstu.com/ftp/2017/0206/b_eeb77cea52c6472865f623a26865c185.jg', { w: 100, h: 61, checked: true, downloaded: false, hide: false}],
+        ['http://tu.zmzjstu.com/ftp/2017/0302/s_8bb968c1fc3937e4b33b0b70fa90b779.jg', { w: 100, h: 46, checked: true, downloaded: false, hide: false}],
+        ['http://tu.zmzjstu.com/ftp/2017/0302/s_daa4b2a8467bea662b446f4e9f961d74.jpg', { w: 100, h: 61, checked: true, downloaded: false, hide: false}],
+        ['http://tu.zmzjstu.com/ftp/2017/0303/s_357a3b63cce671824f21585d4c69519a.jpg', { w: 100, h: 66, checked: true, downloaded: false, hide: false}],
+        ['http://tu.zmzjstu.com/ftp/2017/0302/s_e57cc049cd712ffb82a703cbc1c0bd92.jpg', { w: 100, h: 50, checked: true, downloaded: false, hide: false}],
+        ['blob:https://maxiang.io/770bd6f1-0fa2-4ae4-b7ff-cf2724f2b2a3', { w: 100, h: 50, checked: true, downloaded: false, hide: false}],
+        ['http://tu.zmzjstu.com/ftp/2017/0302/s_8bb968c1fc3937e4b33b0b70fa90b779.jpg', { w: 100, h: 46, checked: true, downloaded: false, hide: false}]
     ],
     imgWidth: 90
 }
@@ -32,10 +34,11 @@ const state = {
  * getters
  */ 
 const getters = {
+    isDownloadSearchMode: state => state.isDownloadSearchMode,
     isGrid: state => state.isGrid,
     isPreviewDownload: state => state.isPreviewDownload,
     imgWidth: state => state.imgWidth,
-    imgUris: state => state.imgs.filter(([key, value]) => !value.downloaded).map(([uri, { w, h, checked, longdesc }]) => {
+    imgUris: state => state.imgs.filter(([key, value]) => !value.downloaded).map(([uri, { w, h, checked, longdesc, hide }]) => {
         h = h === 0 ? 30 : h
         if (longdesc) {
             longdesc = longdesc.replace('./', '')
@@ -47,6 +50,7 @@ const getters = {
             uri,
             w,
             h,
+            hide,
             checked,
             size: {
                 height,
@@ -77,6 +81,12 @@ const getters = {
  * actions
  */
 const actions = {
+    handleTriggerSearchMode ({ commit }) {
+        commit(types.TRIGGER_DOWNLOAD_SEARCH_MODE)
+    },
+    handleSearchWithinDownload ({ commit }) {
+        
+    },
     removeCollection ({ commit }, { hostname, cssSelector }) {
         console.log('hostname:' + hostname)
         console.log('cssSelector:' + cssSelector)
@@ -143,13 +153,13 @@ const actions = {
     },
 
     /* 爬取图片 */
-    triggerCrawl ({ commit }, cssSelector) {
+    triggerCrawl ({ commit, state }, cssSelector) {
         commit(types.SWITCH_PANEL, 'download')
         if (chrome.tabs) {
             chrome.tabs.getSelected(null, function(tab) {
                 chrome.tabs.sendRequest(tab.id, {
                     command: 'fireCrawl',
-                    cssSelector
+                    cssSelector: cssSelector || state.defaultSelectorText
                 }, (imgs) => {
                     JSON.stringify(imgs)
                     commit(types.ADD_IMGS, imgs)
@@ -173,6 +183,9 @@ const actions = {
  * mutations
  */ 
 const mutations = {
+    [types.TRIGGER_DOWNLOAD_SEARCH_MODE] (state) {
+        state.isDownloadSearchMode = !state.isDownloadSearchMode
+    },
     [types.TRIGGER_PREVIEW_TYPE] (state) {
         state.isGrid = !state.isGrid
         if (state.isGrid) {

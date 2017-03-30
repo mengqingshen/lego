@@ -52,7 +52,7 @@
 </template>
 
 <style lang="sass">
-    @import "../../../common/style/common";
+    @import "../../../common/style/modules/_element-colors";
     body {
         margin: 0;
         padding: 0;
