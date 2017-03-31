@@ -37,6 +37,22 @@
             }
         },
         computed: {
+            showCount() {
+                return this.imgUris.filter(({ hide }) => !hide).length
+            },
+            queryStringOfDownloads: {
+                get () {
+                    return this.$store.getters.queryStringOfDownloads
+                },
+                set (queryString) {
+                    if ('' === queryString) {
+                        this.$store.commit(types.SHOW_ALL_DOWNLOAD)
+                    }
+                    else {
+                        this.$store.commit(types.CHANGE_QUERY_OF_DOWNLOADS, queryString)
+                    }
+                }
+            },
             columnCount () {
                 return this.isGrid ? 2 : 1
             },
@@ -63,9 +79,7 @@
                     this.initIScroll()
                 }
             },
-            handlePicClicked () {
-
-            },
+            handlePicClicked () {},
             initIScroll() {
                 if (!this.listScroll) {
                     this.listScroll = new IScroll('.scroll-wrapper', {
@@ -97,10 +111,15 @@
                 span.iconfont-wrap
                     i.el-icon-arrow-left.icon-base(@click="back")
                 .btn-wrap
-                    el-button(icon="download", size="small", @click.stop="handleDownloadClicked") 下载({{checkedCount}}/{{imgUris.length}})
+                    el-button(
+                        icon="download",
+                        size="small",
+                        @click.stop="handleDownloadClicked") 下载({{checkedCount}}/{{imgUris.length}})
                         i.iconfont.icon-icondownload.icon-base
                 span.iconfont-wrap
-                    i.iconfont(:class="[isPreviewDownload ? 'icon-eye' : 'icon-hide']", @click="handlePreviewClicked")
+                    i.iconfont(
+                        :class="[isPreviewDownload ? 'icon-eye' : 'icon-hide']",
+                        @click="handlePreviewClicked")
             transition(
                 :key="isDownloadSearchMode ? 'search-mode' : 'normal-mode'",
                 name="t-slide-fade")
@@ -108,20 +127,30 @@
                     v-show="isPreviewDownload",
                     :class="{'m-search-mode-active': isDownloadSearchMode}")
                     span.iconfont-wrap
-                        i.iconfont(:class="{ 'icon-quanxuan': checkAll, 'icon-qudiaoquanxuan': checkAllOff, 'icon-qudiaoquanxuan1': checkSome}", @click="handleCheckedMass")
+                        i.iconfont(
+                            :class="{ 'icon-quanxuan': checkAll, 'icon-qudiaoquanxuan': checkAllOff, 'icon-qudiaoquanxuan1': checkSome}",
+                            @click="handleCheckedMass")
                     span.iconfont-wrap
                         i.iconfont(:class="[isGrid ? 'icon-viewgrid' : 'icon-viewlist']", @click="handleClickPreviewType")
                     .search-within-download
                         span.iconfont-wrap
                             i.iconfont(class="icon-search", @click="handleTriggerSearchMode")
                         .search-within-download-bar(
-                            v-if="isDownloadSearchMode",
-                            @click="handleSearchWithinDownload")
-                            input(type="search", autofocus, placeholder="输入正则进行匹配")
-                            button.seanway-btn.seanway-btn-tiny 查找
+                            v-if="isDownloadSearchMode")
+                            input(
+                                type="search",
+                                v-model="queryStringOfDownloads",
+                                @keyup.enter="handleSearchWithinDownload",
+                                autofocus,
+                                placeholder="输入正则进行匹配")
+                            button.seanway-btn.seanway-btn-tiny(
+                                @click="handleSearchWithinDownload") 查找
         .scroll-wrapper(v-show="isPreviewDownload")
             .list-area(v-if="imgUris.length > 0", :style="{ columnCount: columnCount}")
-                .box-wrap(v-for="img in imgUris", @click="handleCheck(img.uri)")
+                .box-wrap(
+                    v-for="img in imgUris",
+                    v-show="!img.hide",
+                    @click="handleCheck(img.uri)")
                     .box
                         .checked-tag
                             i.iconfont.icon-selected(v-if="img.checked")
@@ -129,7 +158,7 @@
                             img(:src="img.uri")
                         strong(:style="{ width: imgWidth + 'px' }") {{img.picName}}
                         strong(:style="{ width: imgWidth + 'px' }") {{img.w + ' x ' + img.h}}
-            .empty-list-view(v-if="imgUris.length === 0")
+            .empty-list-view(v-if="imgUris.length === 0 || showCount === 0")
                 i.iconfont.icon-empty
                     
         iframe#hidden-iframe(style="display: none")

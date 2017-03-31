@@ -1,5 +1,6 @@
 import crawl, {
-    crawler
+    crawler,
+    getStringModeOfRegExp
 } from '../../api/crawl'
 import * as types from '../mutation-types'
 
@@ -7,6 +8,7 @@ import * as types from '../mutation-types'
  * initial state
  */ 
 const state = {
+    queryStringOfDownloads: '',
     isDownloadSearchMode: false,
     defaultSelectorText: 'img',
     isGrid: true,
@@ -34,24 +36,18 @@ const state = {
  * getters
  */ 
 const getters = {
+    queryStringOfDownloads: state => state.queryStringOfDownloads,
     isDownloadSearchMode: state => state.isDownloadSearchMode,
     isGrid: state => state.isGrid,
     isPreviewDownload: state => state.isPreviewDownload,
     imgWidth: state => state.imgWidth,
     imgUris: state => state.imgs.filter(([key, value]) => !value.downloaded).map(([uri, { w, h, checked, longdesc, hide }]) => {
         h = h === 0 ? 30 : h
-        if (longdesc) {
-            longdesc = longdesc.replace('./', '')
-        }
         const height = ~~(h / w * state.imgWidth) + 'px'
         const width = state.imgWidth + 'px'
         return {
-            picName: longdesc|| uri.split('/').pop().split('?')[0],
-            uri,
-            w,
-            h,
-            hide,
-            checked,
+            picName: crawler.generateNameOfPic(uri, longdesc),
+            uri, w, h, hide, checked,
             size: {
                 height,
                 width,
@@ -84,12 +80,15 @@ const actions = {
     handleTriggerSearchMode ({ commit }) {
         commit(types.TRIGGER_DOWNLOAD_SEARCH_MODE)
     },
-    handleSearchWithinDownload ({ commit }) {
-        
+    handleSearchWithinDownload ({ commit }, queryRegExp) {
+        if (queryRegExp === '') {
+            return false
+        }
+        else {
+            commit(types.QUERY_BY_REG_EXP, queryRegExp)
+        }
     },
     removeCollection ({ commit }, { hostname, cssSelector }) {
-        console.log('hostname:' + hostname)
-        console.log('cssSelector:' + cssSelector)
         commit(types.REMOVE_FROM_COLLECTION, { hostname, cssSelector })
     },
     removeAllCollection ({ commit }) {
@@ -161,7 +160,6 @@ const actions = {
                     command: 'fireCrawl',
                     cssSelector: cssSelector || state.defaultSelectorText
                 }, (imgs) => {
-                    JSON.stringify(imgs)
                     commit(types.ADD_IMGS, imgs)
                 })
             });
@@ -183,6 +181,21 @@ const actions = {
  * mutations
  */ 
 const mutations = {
+    [types.CHANGE_QUERY_OF_DOWNLOADS] (state, queryRegExp) {
+        state.queryStringOfDownloads = queryRegExp
+    },
+    [types.SHOW_ALL_DOWNLOAD] (state) {
+        state.imgs.forEach(([_, info]) => {
+            info.hide = false
+        })
+    },
+    [types.QUERY_BY_REG_EXP] (state) {
+        state.imgs.forEach(([ uri, info ]) => {
+            const reg = new RegExp(getStringModeOfRegExp(state.queryStringOfDownloads))
+            const picName = crawler.generateNameOfPic(uri, info.longdesc)
+            info.hide = !reg.test(picName)
+        })
+    },
     [types.TRIGGER_DOWNLOAD_SEARCH_MODE] (state) {
         state.isDownloadSearchMode = !state.isDownloadSearchMode
     },

@@ -31,7 +31,6 @@ export default class Crawler {
                 })
             }
             this.getHref(imgInfo.uri).then(href => {
-                console.log('href:' + href)
                 a.setAttribute('href', href)
                 a.setAttribute('download', imgInfo.picName)
                 const evObj  = document.createEvent('MouseEvents')
@@ -93,7 +92,8 @@ export default class Crawler {
                         h: img.naturalHeight,
                         checked: true,
                         downloaded: false,
-                        longdesc: img.getAttribute('longdesc') || null
+                        longdesc: img.getAttribute('longdesc') || null,
+                        hide: false
                     }
                 ]
             })
@@ -111,5 +111,17 @@ export default class Crawler {
             }
             xhr.send()
         })
+    }
+
+    /**
+     * 获取爬去的图片的名字
+     * @param {string} uri 图片资源地址
+     * @param {string} longdesc 图片资源描述（仅针对印象笔记）
+     */
+    generateNameOfPic(uri, longdesc) {
+        if (longdesc) {
+            longdesc = longdesc.replace('./', '')
+        }
+        return longdesc|| uri.split('/').pop().split('?')[0]
     }
 }

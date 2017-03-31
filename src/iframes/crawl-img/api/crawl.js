@@ -1,7 +1,9 @@
 import * as VARIABLES from '../store/variables'
 import Crawler from '../../../api/img_crawler'
+export {
+    getStringModeOfRegExp
+} from '../../../api/utils.js'
 export const crawler = new Crawler()
-
 export default {
     /**
      * 获取所有网站推荐的 css 选择器

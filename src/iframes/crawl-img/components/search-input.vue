@@ -52,12 +52,12 @@
 			div(:key="advanced ? 'on' : 'off'")
 				input#search-input(
 					v-show="advanced",
+					v-model.trim="cssSelectorText",
 					type="text",
 					placeholder="css 选择器",
 					autocomplete="off",
 					autofocus="autofocus",
 					@keyup.enter="handleSearch",
-					v-model.trim="cssSelectorText",
 					@input="handleInput")
 				input#crawl-all-imgs.seanway-btn(
 					v-show="!advanced",
