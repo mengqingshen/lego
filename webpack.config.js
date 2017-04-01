@@ -4,7 +4,7 @@ var webpack = require('webpack')
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 var extractCSS = new ExtractTextPlugin("windowForCrawl.css");
 
 module.exports = {
@@ -122,6 +122,16 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
+        new BrowserSyncPlugin(
+            {
+                host: 'localhost',
+                port: 10040,
+                proxy: 'http://localhost:8080/'
+            },
+            {
+                reload: false
+            }
+        ),
         new CopyWebpackPlugin([
             {
                 from: 'manifest.json'

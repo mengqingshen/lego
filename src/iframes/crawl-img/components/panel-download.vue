@@ -12,6 +12,7 @@
     } from 'vuex'
     import IScroll from 'iscroll'
     import Velocity from 'velocity-animate'
+    import "animate.css"
 
     import * as types from '../store/mutation-types'
     export default {
@@ -147,17 +148,22 @@
                                 @click="handleSearchWithinDownload") 查找
         .scroll-wrapper(v-show="isPreviewDownload")
             .list-area(v-if="imgUris.length > 0", :style="{ columnCount: columnCount}")
-                .box-wrap(
-                    v-for="img in imgUris",
-                    v-show="!img.hide",
-                    @click="handleCheck(img.uri)")
-                    .box
-                        .checked-tag
-                            i.iconfont.icon-selected(v-if="img.checked")
-                        .pic(:style="img.size")
-                            img(:src="img.uri")
-                        strong(:style="{ width: imgWidth + 'px' }") {{img.picName}}
-                        strong(:style="{ width: imgWidth + 'px' }") {{img.w + ' x ' + img.h}}
+                transition-group(
+                    name="zoom-animate",
+                    enter-active-class="animated zoomIn",
+                    leave-active-class="animated zoomOut")
+                    .box-wrap(
+                        :key="img.uri"
+                        v-for="img in imgUris",
+                        v-show="!img.hide",
+                        @click="handleCheck(img.uri)")
+                        .box
+                            .checked-tag
+                                i.iconfont.icon-selected(v-if="img.checked")
+                            .pic(:style="img.size")
+                                img(:src="img.uri")
+                            strong(:style="{ width: imgWidth + 'px' }") {{img.picName}}
+                            strong(:style="{ width: imgWidth + 'px' }") {{img.w + ' x ' + img.h}}
             .empty-list-view(v-if="imgUris.length === 0 || showCount === 0")
                 i.iconfont.icon-empty
                     
