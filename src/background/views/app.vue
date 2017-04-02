@@ -12,15 +12,9 @@
         created () {
             extension.on({
                 'create-craw-window': () => {
-                    chrome.tabs.executeScript(null, {
-                        file: 'common/common.js'
-                    })
-                    chrome.tabs.executeScript(null, {
-                        file: 'content-script/index.js'
-                    })
-                    chrome.tabs.insertCSS(null, {
-                        file: 'content-css/crawl.css'
-                    })
+                    extension.insertScriptToCurrentTab('common/common.js')
+                    extension.insertCSS('content-script/index.js')
+                    extension.insertCSS('content-css/crawl.css')
                 }
             })
         }

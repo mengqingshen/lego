@@ -6,6 +6,14 @@ import {
 	isFunction
 } from './utils.js'
 
+function insertScriptToCurrentTab(file) {
+	_checkTabAPI() && chrome.tabs.executeScript(null, { file })
+}
+
+function insertCSS(file) {
+	_checkTabAPI() && chrome.tabs.insertCSS(null, { file })
+}
+
 /**
  * 发送消息到扩展本身（背景页、popup）
  * 
@@ -106,6 +114,8 @@ export default {
 	emitToExtension,
 	emitToCurrentTab,
 	emitToTab,
+	insertCSS,
+	insertScriptToCurrentTab,
 	getCurrentTab,
 	generateURL,
 	on
