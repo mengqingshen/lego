@@ -1,4 +1,5 @@
 <script>
+    import extension from '../../api/chrome-extension'
     export default {
         data () {
             return {
@@ -13,36 +14,26 @@
         },
         methods: {
             ping () {
-                chrome.tabs.getSelected(null, tab => {
-                    chrome.tabs.sendRequest(tab.id, {
-                        command: 'howareyou'
-                    }, res => {
-                        if (res === 'fine') {
-                            this.toolDownPic.created = true
-                            this.toolDownPic.disabled = true
-                        }
-                        else if (res === 'hidden') {
-                            this.toolDownPic.created = true
-                            this.toolDownPic.disabled = false
-                        }
-                    })
+                extension.emitToCurrentTab('howareyou').then(res => {
+                    if (res === 'fine') {
+                        this.toolDownPic.created = true
+                        this.toolDownPic.disabled = true
+                    }
+                    else if (res === 'hidden') {
+                        this.toolDownPic.created = true
+                        this.toolDownPic.disabled = false
+                    }
                 })
             },
             showCrawlWindow () {
                 if (!this.toolDownPic.disabled) {
                     if (this.toolDownPic.created) {
-                        chrome.tabs.getSelected(null, tab => {
-                            chrome.tabs.sendRequest(tab.id, {
-                                command: 'show-crawl-window'
-                            }, res => {
-                                this.ping()
-                            })
+                        extension.emitToCurrentTab('show-crawl-window').then(res => {
+                            this.ping()
                         })
                     }
                     else {
-                        chrome.extension.sendRequest(null, {
-                            command: 'create-craw-window'
-                        }, res => {
+                        extension.emitToExtension('create-craw-window').then(res => {
                             this.ping()
                         })
                     }

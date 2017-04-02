@@ -1,0 +1,112 @@
+/**
+ * Created by mengqingshen on 2017/4/1.
+ */
+import {
+	isObject,
+	isFunction
+} from './utils.js'
+
+/**
+ * 发送消息到扩展本身（背景页、popup）
+ * 
+ * @param {string} command 消息主题
+ * @param {*} data 消息内容
+ * @return {promise}
+ */
+function emitToExtension(command, data) {
+	return new Promise(resolve => {
+		_checkExtensionAPI() && chrome.extension.sendRequest(null, { command, data}, resolve)
+	})
+}
+
+/**
+ * 发送信息到浏览器窗口当前的 tab
+ * 
+ * @param {string} command 消息主题
+ * @param {*} data 消息内容
+ * @return {promise}
+ */
+function emitToCurrentTab(command, data) {
+	return new Promise(resolve => {
+		getCurrentTab().then(({ id }) => {
+			emitToTab(id, command, data).then(resolve)
+		})
+	})
+}
+
+/**
+ * 发送信息到浏览器窗口指定的 tab
+ * 
+ * @param {number} tabId
+ * @param {string} command 消息主题
+ * @param {*} data 消息内容
+ * @return {promise}
+ */
+function emitToTab(tabId, command, data) {
+	return new Promise(resolve => {
+		_checkTabAPI && chrome.tabs.sendRequest(tabId, { command, data }, resolve)
+	})
+}
+
+/**
+ * 获取当前的选项卡
+ * @return{promise}
+ */
+function getCurrentTab() {
+	return new Promise(resolve => {
+		_checkTabAPI() && chrome.tabs.getSelected(null, resolve)
+	})
+}
+
+/**
+ * 获取或战中页面的链接
+ * 
+ * @param {string} path
+ */
+function generateURL(path) {
+	if (_checkExtensionAPI()) {
+		return chrome.extension.getURL(path)
+	}
+}
+
+/**
+ * 注册事件
+ * 
+ * @param {object} listeners 事件和回调的配置信息
+ */
+function on (listeners) {
+	if (!isObject (listeners) || listeners === null) {
+		return false
+	}
+	_checkExtensionAPI() && chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
+		const command = request.command
+		const data = request.data
+		let listener = null
+		if (command && isFunction(listener = listeners[command])) {
+			sendResponse(listener(data))
+		}
+		else {
+			_err(`${command} is having a problem. Go have a look.`)
+		}
+	})
+}
+
+function _checkExtensionAPI() {
+	return typeof chrome.extension === 'object'
+}
+function _checkTabAPI() {
+	return typeof chrome.tabs === 'object'
+}
+
+function _err(errMsg) {
+	throw new Error('')
+}
+
+export default {
+	emitToExtension,
+	emitToCurrentTab,
+	emitToTab,
+	getCurrentTab,
+	generateURL,
+	on
+}

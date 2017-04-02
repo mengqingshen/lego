@@ -1,5 +1,5 @@
 /**
- * Created by tonyearth on 2016/12/14.
+ * Created by mengqingshen on 2016/12/14.
  */
 import "babel-polyfill"
 import Vue from 'vue'

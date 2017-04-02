@@ -1,34 +1,28 @@
 <template lang="pug">
-  div 内容待定
+    div 内容待定
 </template>
 
 <style lang="sass">
-  
+    
 </style>
 
 <script>
-  export default {
-    created () {
-      chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
-        console.log(sender.tab ?
-              'from a cnotent script:' + sender.tab.url :
-              'from the extension')
-        console.log(request.command)
-        switch(request.command) {
-          case 'create-craw-window':
-            chrome.tabs.executeScript(null, {
-              file: 'common/common.js'
+    import extension from '../../api/chrome-extension'
+    export default {
+        created () {
+            extension.on({
+                'create-craw-window': () => {
+                    chrome.tabs.executeScript(null, {
+                        file: 'common/common.js'
+                    })
+                    chrome.tabs.executeScript(null, {
+                        file: 'content-script/index.js'
+                    })
+                    chrome.tabs.insertCSS(null, {
+                        file: 'content-css/crawl.css'
+                    })
+                }
             })
-            chrome.tabs.executeScript(null, {
-              file: 'content-script/index.js'
-            })
-            chrome.tabs.insertCSS(null, {
-              file: 'content-css/crawl.css'
-            })
-            sendResponse()
-            break;
         }
-      })
     }
-  }
 </script>

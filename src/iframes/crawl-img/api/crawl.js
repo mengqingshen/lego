@@ -1,5 +1,5 @@
 import * as VARIABLES from '../store/variables'
-import Crawler from '../../../api/img_crawler'
+import Crawler from '../../../api/img-crawler'
 export {
     getStringModeOfRegExp
 } from '../../../api/utils.js'

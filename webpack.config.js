@@ -15,6 +15,7 @@ module.exports = {
         'popup/index': './popup/entry.js',
         'content-script/index': './content-script/entry.js',
         'iframes/crawl-img/index': './iframes/crawl-img/entry.js',
+        'iframes/qrcode/index': './iframes/qrcode/entry.js',
         vendor: ['vue', 'vuex', 'jquery']
     },
     output: {
@@ -122,16 +123,6 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
-        new BrowserSyncPlugin(
-            {
-                host: 'localhost',
-                port: 10040,
-                proxy: 'http://localhost:8080/'
-            },
-            {
-                reload: false
-            }
-        ),
         new CopyWebpackPlugin([
             {
                 from: 'manifest.json'
@@ -169,6 +160,13 @@ module.exports = {
             template: 'iframes/crawl-img/index.pug',
             hash: true
         }),
+        new HtmlWebpackPlugin({
+            filename: 'iframes/qrcode/index.html',
+            cache: true,
+            chunks: ['vendor', 'iframes/qrcode/index'],
+            template: 'iframes/qrcode/index.pug',
+            hash: true
+        }),
         new webpack.optimize.CommonsChunkPlugin({
                 cache: true,
                 names: ['vendor'],
@@ -187,13 +185,27 @@ if (process.env.NODE_ENV === 'production') {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {
+        //         warnings: false
+        //     },
+        //     mangle: {
+        //         except: ['super', '$', 'exports', 'require']
+        //     }
+        // })
+    ])
+}
+else {
+    module.exports.plugons = (module.exports.plugin || []).concat([
+        new BrowserSyncPlugin(
+            {
+                host: 'localhost',
+                port: 10040,
+                proxy: 'http://localhost:8080/'
             },
-            mangle: {
-                except: ['super', '$', 'exports', 'require']
+            {
+                reload: false
             }
-        })
+        )
     ])
 }

@@ -1,10 +1,13 @@
-
+/**
+ * Created by mengqingshen on 2017/4/1.
+ */
 <script>
     import {
         mapGetters
     } from 'vuex'
     import $ from 'expose-loader?$!jquery'
-    import '../../../lib/jquery.ba-resize.js'
+    import '../../../lib/jquery.ba-resize'
+    import extension from '../../../api/chrome-extension'
     export default {
         mounted () {
             $('#window-for-crawl').resize(e => {
@@ -27,17 +30,12 @@
         },
         methods: {
             fireResize (e) {
-                if (chrome.tabs) {
-                    chrome.tabs.getSelected(null, tab => {
-                        chrome.tabs.sendRequest(tab.id, {
-                            command: 'resize',
-                            size: {
-                                width: $('#window-for-crawl').width() + 'px',
-                                height: $('#window-for-crawl').height() + 'px'
-                            }
-                        })
-                    })
-                }
+                extension.emitToCurrentTab('resize', {
+                    size: {
+                        width: $('#window-for-crawl').width() + 'px',
+                        height: $('#window-for-crawl').height() + 'px'
+                    }
+                })
             }
         }
     }

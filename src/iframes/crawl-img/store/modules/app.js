@@ -3,7 +3,7 @@ import crawl, {
     getStringModeOfRegExp
 } from '../../api/crawl'
 import * as types from '../mutation-types'
-
+import extension from '../../../../api/chrome-extension'
 /**
  * initial state
  */ 
@@ -141,29 +141,18 @@ const actions = {
     },
 
     /* 关闭爬取图片的窗口 */
-    closeCrawlWindow ({ commit }) {
-        if (chrome.tabs.getSelected) {
-            chrome.tabs.getSelected(null, function(tab) {
-                chrome.tabs.sendRequest(tab.id, {
-                    command: 'closeCrawlWindow'
-                })
-            })
-        }
+    closeCrawlWindow () {
+        extension.emitToCurrentTab('closeCrawlWindow')
     },
 
     /* 爬取图片 */
     triggerCrawl ({ commit, state }, cssSelector) {
         commit(types.SWITCH_PANEL, 'download')
-        if (chrome.tabs) {
-            chrome.tabs.getSelected(null, function(tab) {
-                chrome.tabs.sendRequest(tab.id, {
-                    command: 'fireCrawl',
-                    cssSelector: cssSelector || state.defaultSelectorText
-                }, (imgs) => {
-                    commit(types.ADD_IMGS, imgs)
-                })
-            });
-        }
+        extension.emitToCurrentTab('fireCrawl', {
+            cssSelector: cssSelector || state.defaultSelectorText
+        }).then(imgs => {
+            commit(types.ADD_IMGS, imgs)
+        })
     },
 
     /* 收藏或取消收藏 */

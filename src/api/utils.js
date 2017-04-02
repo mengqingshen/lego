@@ -5,10 +5,25 @@
  * @param {string} literalStr 字面量模式的正则文本
  * @return {string} 字符串模式的正则
  */
-function getStringModeOfRegExp (literalStr) {
+function getStringModeOfRegExp(literalStr) {
 	return literalStr.replace('\\', "\\\\")
 }
 
+function isObject(it) {
+	return Object.prototype.toString.call(it) === '[object Object]'
+}
+
+function isFunction(it) {
+	return Object.prototype.toString.call(it) === '[object Function]'
+}
+
+function isArray(it) {
+	return Object.prototype.toString.call(it) === '[object Array]'
+}
+
 export {
-	getStringModeOfRegExp
+	getStringModeOfRegExp,
+	isObject,
+	isFunction,
+	isArray
 }

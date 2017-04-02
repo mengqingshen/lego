@@ -10,7 +10,7 @@
 				mask: true,
 				show: false,
 				style: {width: '220px', height: '100px'},
-				src: extension.generateURL('iframes/crawl-img/index.html')
+				src: extension.generatetURL('iframes/crawl-img/index.html')
 			}
 		},
 		components: {
@@ -20,22 +20,11 @@
 		},
 		created () {
 			extension.on({
-				'show-crawl-window': data => {
+				'show-crawl-window': () => {
 					this.showCrawlWindow()
 				},
-				'howareyou': data => {
-					return this.show ? 'fine' : 'hidden'
-				},
-				'resize': data => {
-					Object.assign(this.style, data.size)
-				},
-				'fireCrawl': data => {
-					return this.crawl(data.cssSelector)
-				},
-				'closeCrawlWindow': data => {
-					if (this.show) {
-						this.hideCrawlWindow()
-					}
+				'resize': () => {
+					Object.assign(this.style, request.size)
 				}
 			})
 		},
@@ -71,14 +60,15 @@
 							img(v-show="!mask", src="../assets/si-glyph-umbrella-close.png")
 						span.img-wrap(@click="hideCrawlWindow")
 							img(src="../assets/close.png")
-					iframe(
-						:src="src",
-						frameborder="0",
-						seamless="seamless",
-						scrolling="no",
-						id="seanway-iframe",
-						:style="{width: this.style.width, height: this.style.height}"
-					)
+					transition
+						iframe(
+							:src="src",
+							frameborder="0",
+							seamless="seamless",
+							scrolling="no",
+							id="seanway-iframe",
+							:style="{width: this.style.width, height: this.style.height}"
+						)
 </template>
 
 <style scoped>
