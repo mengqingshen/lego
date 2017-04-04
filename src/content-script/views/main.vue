@@ -44,6 +44,7 @@
                 'show-sub-window': subWinName => {
                     this.toggleSubWinMA(subWinName)
                     this.showWinMA()
+                    return this.curSubWinMA
                 }
             })
         },
@@ -76,6 +77,7 @@
                             img(src="../assets/close.png")
                     .seanway-content-container
                         transition(
+                            appear,
                             name="animate-flipY",
                             mode="out-in",
                             enter-active-class="animated flipInY",

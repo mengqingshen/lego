@@ -11,11 +11,11 @@
     export default {
         created () {
             extension.on({
-                'create-window': (subWinName) => {
+                'create-window': subWinName => {
                     extension.insertCSS('content-css/common.css')
                     extension.insertScriptToCurrentTab('common/common.js')
-                    extension.insertScriptToCurrentTab('content-script/index.js').then(() => {
-                        extension.emitToCurrentTab('show-sub-window', subWinName)
+                    return extension.insertScriptToCurrentTab('content-script/index.js').then(() => {
+                        return extension.emitToCurrentTab('show-sub-window', subWinName)
                     })
                 }
             })

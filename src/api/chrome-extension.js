@@ -47,9 +47,9 @@ function emitToCurrentTab(command, data) {
 	console.log('to tab command:' + command)
 	console.log(data)
 	return new Promise(resolve => {
-		getCurrentTab().then(({ id }) => {
-			emitToTab(id, command, data).then(resolve)
-		})
+		return getCurrentTab().then(({ id }) => {
+			return emitToTab(id, command, data)
+		}).then(resolve)
 	})
 }
 
@@ -104,7 +104,7 @@ function on (listeners) {
 		let listener = null
 		if (command in listeners) {
 			listener = listeners[command]
-			sendResponse(listener(data))
+			Promise.resolve(listener(data)).then(sendResponse)
 		}
 	})
 }
