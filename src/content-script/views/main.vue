@@ -43,6 +43,7 @@
                 },
                 'show-sub-window': subWinName => {
                     this.toggleSubWinMA(subWinName)
+                    this.showWinMA()
                 }
             })
         },

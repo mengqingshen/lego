@@ -48,10 +48,10 @@ const mutations = {
 		state.isMask = !state.isMask
 	},
 	[types.MA_HIDE_WIN] (state) {
-		state.hide = true
+		state.isHide = true
 	},
 	[types.MA_SHOW_WIN] (state) {
-		state.hide = false
+		state.isHide = false
 	},
 	[types.MA_TOGGLE_SUB_WIN] (state, subWin) {
 		console.log(subWin)

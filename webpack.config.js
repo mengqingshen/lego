@@ -19,7 +19,7 @@ module.exports = {
         vendor: ['vue', 'vuex', 'jquery']
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, './dist'),
         publicPath: '/',
         filename: '[name].js',
         chunkFilename: "/chunks/[name].js"
