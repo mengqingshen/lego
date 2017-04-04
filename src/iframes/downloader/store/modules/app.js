@@ -4,9 +4,7 @@ import crawl, {
 } from '../../api/crawl'
 import * as types from '../mutation-types'
 import extension from '../../../../api/chrome-extension'
-/**
- * initial state
- */ 
+
 const state = {
     queryStringOfDownloads: '',
     isDownloadSearchMode: false,
@@ -32,9 +30,6 @@ const state = {
     imgWidth: 90
 }
 
-/**
- * getters
- */ 
 const getters = {
     queryStringOfDownloads: state => state.queryStringOfDownloads,
     isDownloadSearchMode: state => state.isDownloadSearchMode,
@@ -73,9 +68,6 @@ const getters = {
     selectorsRecommanded: state => state.selectorsRecommanded
 }
 
-/** 
- * actions
- */
 const actions = {
     handleTriggerSearchMode ({ commit }) {
         commit(types.TRIGGER_DOWNLOAD_SEARCH_MODE)
@@ -142,13 +134,13 @@ const actions = {
 
     /* 关闭爬取图片的窗口 */
     closeCrawlWindow () {
-        extension.emitToCurrentTab('closeCrawlWindow')
+        extension.emitToCurrentTab('close-crawl-window')
     },
 
     /* 爬取图片 */
     triggerCrawl ({ commit, state }, cssSelector) {
         commit(types.SWITCH_PANEL, 'download')
-        extension.emitToCurrentTab('fireCrawl', {
+        extension.emitToCurrentTab('fire-crawl', {
             cssSelector: cssSelector || state.defaultSelectorText
         }).then(imgs => {
             commit(types.ADD_IMGS, imgs)
@@ -166,9 +158,6 @@ const actions = {
     }
 }
 
-/**
- * mutations
- */ 
 const mutations = {
     [types.CHANGE_QUERY_OF_DOWNLOADS] (state, queryRegExp) {
         state.queryStringOfDownloads = queryRegExp

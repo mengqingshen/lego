@@ -25,7 +25,12 @@
    },
   "content_scripts":[],
   "web_accessible_resources": [
-    "iframes/crawl-img/index.html",
+    "content-css/common.css",
+    "common/common.js",
+    "popup/index.html",
+    "content-script/index.js",
+    "iframes/downloader/index.html",
+    "iframes/qrcode/index.html",
     "chunks/*.js"
   ]
 }

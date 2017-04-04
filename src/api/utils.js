@@ -5,6 +5,12 @@
  * @param {string} literalStr 字面量模式的正则文本
  * @return {string} 字符串模式的正则
  */
+
+import extension from './chrome-extension'
+
+function fireResize (size) {
+	extension.emitToCurrentTab('resize', { size })
+}
 function getStringModeOfRegExp(literalStr) {
 	return literalStr.replace('\\', "\\\\")
 }
@@ -25,5 +31,6 @@ export {
 	getStringModeOfRegExp,
 	isObject,
 	isFunction,
-	isArray
+	isArray,
+	fireResize
 }

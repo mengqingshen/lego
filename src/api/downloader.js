@@ -82,7 +82,7 @@ export default class Crawler {
      * @returns{array} 找到的所有图片的 URL 组成的数组
      */
     getImgUrlsByCSSSelector(cssSelector) {
-        const imgDoms = $(cssSelector + ':not(#seanway-crawl-window img)')
+        const imgDoms = $(cssSelector + ':not(#seanway-window img)')
         if(imgDoms) {
             return Array.from(imgDoms).map(function(img) {
                 return [

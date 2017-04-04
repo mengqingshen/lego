@@ -1,10 +1,21 @@
 <script>
 	// import $ from 'expose-loader?$!jquery'
 	import QRCode from 'qrcode'
+	import $ from 'expose-loader?$!jquery'
+	import {
+        fireResize
+    } from '../../api/utils'
+
 	export default {
 		mounted () {
 			const text = location.href
-			QRCode.toCanvas(this.$refs.qrcode, text, (error) => {})
+			QRCode.toCanvas(this.$refs.qrcode, text, (error) => {
+				const $win = $('#ca-qrcode-container')
+				fireResize({
+					w: $win.width() + 'px',
+					h: $win.height() + 'px'
+				})
+			})
 		}
 	}
 </script>

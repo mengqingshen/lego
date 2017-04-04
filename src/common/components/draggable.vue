@@ -4,6 +4,7 @@
 
 </template>
 <script>
+	import $ from 'expose-loader?$!jquery'
 	export default {
 		mounted() {
 			$(window).resize(e => {
@@ -13,12 +14,6 @@
 				this.isDraging = false
 			})
 			this.resetCurrentPos()
-		},
-		props: {
-			title: {
-				type: String,
-				required: true
-			}
 		},
 		data() {
 			return {
@@ -91,5 +86,8 @@
 		overflow: hidden;
 		background: transparent;
 		z-index: 999999999999999999;
+		&:active {
+			opacity: .5;
+		}
 	}
 </style>

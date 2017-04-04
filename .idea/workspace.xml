@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="cbde3cc2-48f8-41ec-bdb8-b4c67384420e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/content-css/crawl-img.scss" afterPath="$PROJECT_DIR$/src/content-css/crawl-img.scss" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/content-css/downloader.scss" afterPath="$PROJECT_DIR$/src/content-css/downloader.scss" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />

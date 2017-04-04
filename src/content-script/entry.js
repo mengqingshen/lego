@@ -1,18 +1,14 @@
 import Vue from 'vue'
+import main from './views/main'
+import store from './store'
 new Vue({
-    el: "#seanway-temp-window",
-    render (h) {
-        return (<imgCrawl/>)
-    },
     beforeCreate () {
         $('<div>', {
             id: "seanway-temp-window"
         }).appendTo($(document.body))
     },
-    components: {
-        imgCrawl: (resolve, reject) => {
-            resolve(require('./views/img-crawl'))
-        }
-    }
+    el: "#seanway-temp-window",
+    render: h => h(main),
+    store
 })
 

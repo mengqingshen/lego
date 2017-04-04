@@ -8,10 +8,18 @@
     import $ from 'expose-loader?$!jquery'
     import '../../../lib/jquery.ba-resize'
     import extension from '../../../api/chrome-extension'
+    import {
+        fireResize
+    } from '../../../api/utils'
+    
     export default {
         mounted () {
-            $('#window-for-crawl').resize(e => {
-                this.fireResize()
+            const $win = $('#window-for-crawl')
+            $win.resize(e => {
+                fireResize({
+                    w: $win.width() + 'px',
+                    h: $win.height() + 'px'
+                })
             }).resize()
         },
         computed: {
@@ -26,16 +34,6 @@
             },
             download: (resolve, reject) => {
                 resolve(require('../components/panel-download'))
-            }
-        },
-        methods: {
-            fireResize (e) {
-                extension.emitToCurrentTab('resize', {
-                    size: {
-                        width: $('#window-for-crawl').width() + 'px',
-                        height: $('#window-for-crawl').height() + 'px'
-                    }
-                })
             }
         }
     }

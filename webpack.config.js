@@ -5,7 +5,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
-var extractCSS = new ExtractTextPlugin("windowForCrawl.css");
+var extractCommomForContentCSS = new ExtractTextPlugin("content-css/common.css");
 
 module.exports = {
     cache: true,
@@ -14,7 +14,7 @@ module.exports = {
         'background/index': './background/entry.js',
         'popup/index': './popup/entry.js',
         'content-script/index': './content-script/entry.js',
-        'iframes/crawl-img/index': './iframes/crawl-img/entry.js',
+        'iframes/downloader/index': './iframes/downloader/entry.js',
         'iframes/qrcode/index': './iframes/qrcode/entry.js',
         vendor: ['vue', 'vuex', 'jquery']
     },
@@ -61,8 +61,8 @@ module.exports = {
                     {
                         loader: 'babel-loader',
                         options: {
-                                presets: ['es2015', 'stage-0'],
-                                cacheDirectory: true
+                            presets: ['es2015', 'stage-0'],
+                            cacheDirectory: true
                         }
                     }
                 ],
@@ -72,22 +72,27 @@ module.exports = {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },
+            // 针对页面中窗口的通用样式需要提取出单独的文件，从而通过 insertCSS 注入到页面
+            {
+                test: /seanway\.scss$/,
+                use: extractCommomForContentCSS.extract([
+                    'css-loader',
+                    'postcss-loader',
+                    'sass-loader'
+                ]),
+                include: /content-css/,
+            },
             {
                 test: /\.s[a|c]ss$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                            }
-                        },
-                        'postcss-loader',
-                        'sass-loader'
-                    ],
-                    publicPath: "/dist"
-                })
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'postcss-loader',
+                    'sass-loader'
+                ],
+                exclude: /content-css/
             },
+
             {
                 test: /\.pug$/,
                 use: 'pug-loader'
@@ -121,7 +126,7 @@ module.exports = {
         historyApiFallback: true,
         noInfo: true
     },
-    devtool: 'source-map',
+    devtool: 'cheap-module-source-map',
     plugins: [
         new CopyWebpackPlugin([
             {
@@ -132,11 +137,6 @@ module.exports = {
                 to: 'assets/way.png'
             }
         ]),
-        new ExtractTextPlugin({
-            filename: "content-css/crawl.css",
-            disable: false,
-            allChunks: true
-        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
@@ -154,10 +154,10 @@ module.exports = {
             hash: true
         }),
         new HtmlWebpackPlugin({
-            filename: 'iframes/crawl-img/index.html',
+            filename: 'iframes/downloader/index.html',
             cache: true,
-            chunks: ['vendor', 'iframes/crawl-img/index'],
-            template: 'iframes/crawl-img/index.pug',
+            chunks: ['vendor', 'iframes/downloader/index'],
+            template: 'iframes/downloader/index.pug',
             hash: true
         }),
         new HtmlWebpackPlugin({
@@ -172,12 +172,13 @@ module.exports = {
                 names: ['vendor'],
                 filename: "common/common.js"
         }),
-        new webpack.BannerPlugin("这里是打包文件头部注释！")
+        new webpack.BannerPlugin("这里是打包文件头部注释！"),
+        extractCommomForContentCSS
     ]
 }
 
 if (process.env.NODE_ENV === 'production') {
-    module.exports.devtool = '#source-map'
+    module.exports.devtool = 'cheap-module-source-map'
     // http://vue-loader.vuejs.org/en/workflow/production.html
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({
@@ -196,7 +197,7 @@ if (process.env.NODE_ENV === 'production') {
     ])
 }
 else {
-    module.exports.plugons = (module.exports.plugin || []).concat([
+    module.exports.plugins = (module.exports.plugins || []).concat([
         new BrowserSyncPlugin(
             {
                 host: 'localhost',

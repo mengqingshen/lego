@@ -7,11 +7,19 @@ import {
 } from './utils.js'
 
 function insertScriptToCurrentTab(file) {
-	_checkTabAPI() && chrome.tabs.executeScript(null, { file })
+	return new Promise((resolve, reject) => {
+		_checkTabAPI() && chrome.tabs.executeScript(null, { file }, () => {
+			resolve()
+		})
+	})
 }
 
 function insertCSS(file) {
-	_checkTabAPI() && chrome.tabs.insertCSS(null, { file })
+	return new Promise((resolve, reject) => {
+		_checkTabAPI() && chrome.tabs.insertCSS(null, { file }, () => {
+			resolve()
+		})
+	})
 }
 
 /**
@@ -22,6 +30,7 @@ function insertCSS(file) {
  * @return {promise}
  */
 function emitToExtension(command, data) {
+	console.log('to extension command:' + command)
 	return new Promise(resolve => {
 		_checkExtensionAPI() && chrome.extension.sendRequest(null, { command, data}, resolve)
 	})
@@ -35,6 +44,8 @@ function emitToExtension(command, data) {
  * @return {promise}
  */
 function emitToCurrentTab(command, data) {
+	console.log('to tab command:' + command)
+	console.log(data)
 	return new Promise(resolve => {
 		getCurrentTab().then(({ id }) => {
 			emitToTab(id, command, data).then(resolve)
@@ -87,14 +98,13 @@ function on (listeners) {
 		return false
 	}
 	_checkExtensionAPI() && chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
+		console.log(request)
 		const command = request.command
 		const data = request.data
 		let listener = null
-		if (command && isFunction(listener = listeners[command])) {
+		if (command in listeners) {
+			listener = listeners[command]
 			sendResponse(listener(data))
-		}
-		else {
-			_err(`${command} is having a problem. Go have a look.`)
 		}
 	})
 }

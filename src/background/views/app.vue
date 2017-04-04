@@ -1,5 +1,5 @@
 <template lang="pug">
-    div 内容待定
+    div 待开发
 </template>
 
 <style lang="sass">
@@ -11,10 +11,12 @@
     export default {
         created () {
             extension.on({
-                'create-craw-window': () => {
+                'create-window': (subWinName) => {
+                    extension.insertCSS('content-css/common.css')
                     extension.insertScriptToCurrentTab('common/common.js')
-                    extension.insertCSS('content-script/index.js')
-                    extension.insertCSS('content-css/crawl.css')
+                    extension.insertScriptToCurrentTab('content-script/index.js').then(() => {
+                        extension.emitToCurrentTab('show-sub-window', subWinName)
+                    })
                 }
             })
         }

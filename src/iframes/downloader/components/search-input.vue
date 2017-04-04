@@ -116,7 +116,7 @@
 			line-height: 36px;
 			padding: 3px 10px;
 			transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
-			width: calc(100 - 26px);
+			width: calc(100% - 26px);
 			background-image: none;
 			box-sizing: border-box;
 		}
