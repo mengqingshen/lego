@@ -9,10 +9,8 @@
 		seamless="seamless",
 		scrolling="no",
 		id="seanway-iframe",
-		:style="{width: sizeMA.w, height: sizeMA.h}"
-	)
+		:style="{width: sizeMA.w, height: sizeMA.h}")
 </template>
-
 <script>
 	import {
 		mapGetters

@@ -198,15 +198,15 @@ if (process.env.NODE_ENV === 'production') {
 }
 else {
     module.exports.plugins = (module.exports.plugins || []).concat([
-        new BrowserSyncPlugin(
-            {
-                host: 'localhost',
-                port: 10040,
-                proxy: 'http://localhost:8080/'
-            },
-            {
-                reload: false
-            }
-        )
+        // new BrowserSyncPlugin(
+        //     {
+        //         host: 'localhost',
+        //         port: 10040,
+        //         proxy: 'http://localhost:8080/'
+        //     },
+        //     {
+        //         reload: false
+        //     }
+        // )
     ])
 }

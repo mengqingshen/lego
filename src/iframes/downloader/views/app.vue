@@ -11,7 +11,7 @@
     import {
         fireResize
     } from '../../../api/utils'
-    
+    import "animate.css"
     export default {
         mounted () {
             const $win = $('#window-for-crawl')
@@ -41,7 +41,11 @@
 
 <template lang="pug">
     #window-for-crawl
-        transition(name="panel-switch" mode="out-in")
+        transition(
+            name="panel-switch",
+            mode="out-in",
+            enter-active-class="animated fadeIn",
+            leave-active-class="animated fadeOut")
             keep-alive
                 component(v-bind:is="currentPanel")
 

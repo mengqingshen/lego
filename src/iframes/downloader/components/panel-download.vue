@@ -146,14 +146,21 @@
                                 placeholder="输入正则进行匹配")
                             button.seanway-btn.seanway-btn-tiny(
                                 @click="handleSearchWithinDownload") 查找
-        .scroll-wrapper(v-show="isPreviewDownload")
-            .list-area(v-if="imgUris.length > 0", :style="{ columnCount: columnCount}")
+        transition(
+            mode: 'out-in',
+            enter-active-class="animated fadeIn",
+            leave-active-class="animated fadeOut")
+            .scroll-wrapper(v-show="isPreviewDownload")
                 transition-group(
-                    name="zoom-animate",
-                    enter-active-class="animated zoomIn",
-                    leave-active-class="animated zoomOut")
+                    name="box",
+                    tag="div",
+                    class="list-area",
+                    enter-active-class="animated flipInY",
+                    leave-active-class="animated flipOutY",
+                    v-if="imgUris.length > 0",
+                    :style="{ columnCount: columnCount}")
                     .box-wrap(
-                        :key="img.uri"
+                        :key="img.uri",
                         v-for="img in imgUris",
                         v-show="!img.hide",
                         @click="handleCheck(img.uri)")
@@ -164,9 +171,8 @@
                                 img(:src="img.uri")
                             strong(:style="{ width: imgWidth + 'px' }") {{img.picName}}
                             strong(:style="{ width: imgWidth + 'px' }") {{img.w + ' x ' + img.h}}
-            .empty-list-view(v-if="imgUris.length === 0 || showCount === 0")
-                i.iconfont.icon-empty
-                    
+                .empty-list-view(v-if="imgUris.length === 0 || showCount === 0")
+                    i.iconfont.icon-empty
         iframe#hidden-iframe(style="display: none")
 </template>
 
@@ -248,6 +254,9 @@
     .list-area {
         column-gap: 5px;
         padding: 5px;
+        .box-move {
+            transition: transform 1s;
+        }
         .box {
             position: relative;
             backface-visibility: hidden;
