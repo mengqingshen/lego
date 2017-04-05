@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "watch": "cross-env NODE_ENV=production webpack --progress --hide-modules -w"
+    "watch": "cross-env NODE_ENV=production webpack --progress --hide-modules -w",
+    "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
     "animate.css": "^3.5.2",
@@ -43,7 +44,14 @@
     "cross-env": "^1.0.6",
     "css-loader": "^0.23.1",
     "element-ui": "^1.0.2",
-    "eslint": "^3.16.1",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.0.0",
+    "eslint-loader": "^1.7.1",
+    "eslint-plugin-html": "^2.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.2.0",
     "expose-loader": "^0.7.3",
     "extract-text-webpack-plugin": "^2.0.0",
     "file-loader": "^0.8.5",

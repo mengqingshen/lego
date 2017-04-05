@@ -1,12 +1,12 @@
-var path = require('path')
-var projectRoot = path.resolve(__dirname, '../')
-var webpack = require('webpack')
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
-var extractCommomForContentCSS = new ExtractTextPlugin("content-css/common.css");
-var extractForIframes = new ExtractTextPlugin("[name].css");
+var path = require('path'),
+    projectRoot = path.resolve(__dirname, '../'),
+    webpack = require('webpack'),
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
+    HtmlWebpackPlugin = require('html-webpack-plugin'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+    extractCommomForContentCSS = new ExtractTextPlugin("content-css/common.css"),
+    extractForIframes = new ExtractTextPlugin("[name].css");
 
 module.exports = {
     cache: true,
@@ -48,6 +48,12 @@ module.exports = {
         //   }
         // ],
         rules: [
+            {
+                enforce: 'pre',
+                test: /\.vue$/,
+                loader: 'eslint-loader',
+                exclude: /node_modules/
+            },
             {
                 test: require.resolve('jquery'),
                 loader: "expose-loader?$!expose-loader?jQuery"
