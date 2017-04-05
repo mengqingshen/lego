@@ -68,7 +68,7 @@
 
 </template>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
 	@import "../../../common/style/modules/_element-colors";
 	.move-enter,
 	.move-enter-active,

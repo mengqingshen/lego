@@ -86,7 +86,7 @@
                                     :is="curSubWinMA")
 </template>
 
-<style lang="sass">
+<style lang="scss">
     #seayway-mask {
 		position: fixed;
 		top: 0;

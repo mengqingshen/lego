@@ -61,7 +61,7 @@
 		}
 	}
 </script>
-<style lang="sass" scoped>
+<style lang="scss" scoped>
 	.ui-mask {
 		position: absolute;
 		left: 0;

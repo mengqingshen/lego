@@ -36,7 +36,7 @@
                 strong {{subWin.desc}}
 </template>
 
-<style lang="sass">
+<style lang="scss">
     $gap: 5px;
     body {
         margin: auto;

@@ -6,6 +6,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 var extractCommomForContentCSS = new ExtractTextPlugin("content-css/common.css");
+var extractForIframes = new ExtractTextPlugin("[name].css");
 
 module.exports = {
     cache: true,
@@ -51,9 +52,39 @@ module.exports = {
                 test: require.resolve('jquery'),
                 loader: "expose-loader?$!expose-loader?jQuery"
             },
+            
+            // 提取在 iframe 显示的页面的 css 到单独的文件。期望能利用浏览器的缓存，并降低 js 消耗的资源（并没对比分析）。
             {
                 test: /\.vue$/,
-                use: ['vue-loader']
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                        scss: extractForIframes.extract({
+                            use: [
+                                'css-loader',
+                                'sass-loader'
+                            ],
+                            fallback: 'vue-style-loader'
+                        })
+                    }
+                },
+                include: /iframes/
+            },
+
+            // options 中的配置不能省略（因为默认情况下 .vue 文件中只能 lang="sass"，lang="scss" 会报错）
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                        scss: [
+                                'vue-style-loader',
+                                'css-loader',
+                                'sass-loader'
+                            ]
+                    }
+                },
+                exclude: /iframes/
             },
             {
                 test: /\.js$/,
@@ -173,7 +204,8 @@ module.exports = {
                 filename: "common/common.js"
         }),
         new webpack.BannerPlugin("这里是打包文件头部注释！"),
-        extractCommomForContentCSS
+        extractCommomForContentCSS,
+        extractForIframes
     ]
 }
 
@@ -186,27 +218,27 @@ if (process.env.NODE_ENV === 'production') {
                 NODE_ENV: '"production"'
             }
         }),
-        // new webpack.optimize.UglifyJsPlugin({
-        //     compress: {
-        //         warnings: false
-        //     },
-        //     mangle: {
-        //         except: ['super', '$', 'exports', 'require']
-        //     }
-        // })
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            },
+            mangle: {
+                except: ['super', '$', 'exports', 'require']
+            }
+        })
     ])
 }
 else {
     module.exports.plugins = (module.exports.plugins || []).concat([
-        // new BrowserSyncPlugin(
-        //     {
-        //         host: 'localhost',
-        //         port: 10040,
-        //         proxy: 'http://localhost:8080/'
-        //     },
-        //     {
-        //         reload: false
-        //     }
-        // )
+        new BrowserSyncPlugin(
+            {
+                host: 'localhost',
+                port: 10040,
+                proxy: 'http://localhost:8080/'
+            },
+            {
+                reload: false
+            }
+        )
     ])
 }

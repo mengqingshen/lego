@@ -51,7 +51,7 @@
 
 </template>
 
-<style lang="sass">
+<style lang="scss">
     @import "../../../common/style/modules/_element-colors";
     body {
         margin: 0;

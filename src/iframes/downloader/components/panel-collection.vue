@@ -47,7 +47,7 @@
                         i.el-icon-delete(@click.stop="removeCollection({hostname: sels[0], cssSelector: sel})")
 </template>
 
-<style lang="sass">
+<style lang="scss">
 @import "../../../common/style/modules/_element-colors";
 #panel-collection {
     background-color: $color-black;

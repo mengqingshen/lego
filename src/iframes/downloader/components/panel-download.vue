@@ -174,7 +174,7 @@
         iframe#hidden-iframe(style="display: none")
 </template>
 
-<style lang="sass">
+<style lang="scss">
     @import "../../../common/style/modules/_element-colors";
     #panel-download {
         position: relative;
@@ -182,7 +182,7 @@
     }
 </style>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
     @import "../../../common/style/modules/_element-colors";
     @import "../../../common/style/modules/_sizes";
     .empty-list-view {

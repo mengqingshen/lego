@@ -76,7 +76,7 @@
                         i(:key="selector.id", @click.stop="starOrNot(selector, $event)", v-bind:class="[selector.isCollected ? 'el-icon-star-on' : 'el-icon-star-off']")
 </template>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
     @import "../../../common/style/modules/_element-colors";
     .header {
         overflow: hidden;
