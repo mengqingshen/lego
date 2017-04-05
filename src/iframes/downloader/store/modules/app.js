@@ -291,9 +291,7 @@ const mutations = {
     /* 添加一组图片 */
     [types.ADD_IMGS] (state, newImgs) {
         if(newImgs) {
-            const temp = [...state.imgs]
-            temp.push(...newImgs)
-            state.imgs = Array.from(new Map(temp))
+            state.imgs = state.imgs.concat(newImgs)
         }
     }
 }

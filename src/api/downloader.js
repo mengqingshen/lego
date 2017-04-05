@@ -84,7 +84,7 @@ export default class Crawler {
     getImgUrlsByCSSSelector(cssSelector) {
         const imgDoms = $(cssSelector + ':not(#seanway-window img)')
         if(imgDoms) {
-            return Array.from(imgDoms).map(function(img) {
+            return Array.from(imgDoms).filter(img => !!img.src).map(function(img) {
                 return [
                     img.src,
                     {

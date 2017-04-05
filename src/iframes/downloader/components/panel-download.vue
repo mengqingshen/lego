@@ -46,11 +46,9 @@
                     return this.$store.getters.queryStringOfDownloads
                 },
                 set (queryString) {
+                    this.$store.commit(types.CHANGE_QUERY_OF_DOWNLOADS, queryString)
                     if ('' === queryString) {
                         this.$store.commit(types.SHOW_ALL_DOWNLOAD)
-                    }
-                    else {
-                        this.$store.commit(types.CHANGE_QUERY_OF_DOWNLOADS, queryString)
                     }
                 }
             },
@@ -164,7 +162,7 @@
                         v-for="img in imgUris",
                         v-show="!img.hide",
                         @click="handleCheck(img.uri)")
-                        .box
+                        .box(:title="img.picName")
                             .checked-tag
                                 i.iconfont.icon-selected(v-if="img.checked")
                             .pic(:style="img.size")
