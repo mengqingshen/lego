@@ -1,38 +1,56 @@
-# chrome-extension-seanway
 
-## 构建系统
+#  chrome 扩展
 
+## 1 这个扩展有啥用？
+
++ 批量下载网页上的图片
++ 网址二维码
++ 更多功能开发中...
+
+## 2 为什么做这个扩展？
+作为 WEB 前端这个角色，少不了和浏览器打交道。就我自己来讲，无论工作中还是生活中，chrome 应该是我使用最频繁的工具。借用下罗振宇的"国民总时间"的概念，我的这部分可支配的“国民总时间”大半都奉献给了 chrome。 一开始开发 chrome 扩展，是2015年的事情，因为工作需求要给运营部门开发过两个，来做些自动化编辑和操作和事情，收获了不少乐趣。自己开发的东西给运营的同事带来了一些效率（被苦恼的运营三天两头叫过去调试 BUG 的部分我是不会告诉你们的），我是很开心的。我猜，作为群居动物，做一些对别人很有意义的事情本身就是很吸引人的吧。
+
+后来就没有做 chrome 扩展了，直到现在。工作两年多，多多少少也积累了一些开发的技能和知识，开发一些独立产品对我的诱惑越来越大。构想了几个或成熟或不成熟的东西，多半都还只停留在设计阶段。某一天，突然想，拥有一个为自己量身打造的 chrome 扩展，听起来难道不是一件挺酷的事情吗？好吧，说干就干。正好那段时间正在迁移马克飞象上旧的笔记到 [MWeb](http://zh.mweb.im/),还就真没找到顺手的 chrome 扩展来批量下载旧笔记上的图片，OK,就从这个功能开始吧。后面陆续注意其它的需求，于是就准备持续地开发。当然了，这个扩展也应该会和我后面其它的作品一样，作为自己探索新的开发方式和新技术的试验场，嘿嘿。
+
+## 3 简单列下技术要点...
+### 构造相关
 + webpack2
++ npm3
+
+### 框架
++ Vue2
++ Vuex2
++ jQuery3
++ Animate.css
+
+### 预处理
 + SASS
-+ pug
++ PostCSS
++ PUG
 
-## Start
+### 其它
++ ESLint
 
- - Clone or download this repository
- - Enter your local directory, and install dependencies:
+## 4 开发遇到的问题总结几个，万一有人感兴趣呢...
 
-``` bash
-npm install
-```
+### 第三方库相关
+- [x] vuex 中 v-model 问题。**解决方法：**利用计算属性的 setter(有时候一个空的 setter 也能工作，原因未知)
+- [ ] chrome 插件调试过程中不能使用 vue-dev-tool 观察 store 等状态，不方便调试。
+- [x] style 使用 scoped 特性是通过往相应节点插入一个没有值的属性来实现作用命名空间的，如果 css 选择器定位的是某个组件中的元素，在预编译阶段无法完成插入，则无法生效。**解决方法**：在 `.vue` 中使用多个 style，存在问题的 css 放在没有 scoped 的 style 中。
 
-## Develop
+### 平台相关
+- [ ] 下载图片时，引发迅雷插件报错（不管它？）
 
-``` bash
-# serve with hot reload at localhost:8080
-npm run dev
-```
+### 架构相关
+- [x] [将 jQuery 暴露到全局，从而顺利使用 jQuery 插件](https://github.com/yiifaa/yii-template/blob/master/webpack.MD)
+- [ ] 使用 `.vue` 文件无法优雅地使用 compass，可以考虑用分离的方式开发组件，即 template(pug)、style(scss)、和 js 分离，在js 中整合（并没有这样做）。
 
-## Build
+- [ ] 无法使用 webpack 的 code spliing 功能按需加在 content script，因为用 ajax 的方式无法访问到扩展中的文件。
 
-``` bash
-# build for production with minification
-npm run build
-```
-
-## Chrome 插件 API
-
-+ [chrome官方文档](https://developer.chrome.com/getstarted)
-
-+ [百度浏览器插件开发平台](https://chajian.baidu.com/developer/extensions/api_index.html)
-
-+ [360极速浏览器应用开放平台](http://open.chrome.360.cn/extension_dev/overview.html)
+### webpack
+- [x] code spliing。
+- [x] img base64。
+- [x] 通过 CommonsChunkPlugin 提取第三方库到公共 js ，提升构建效率，降低整个 bundle 的体积。
+- [x] 配合 Browsersync 实现多端预览效果(呵呵，其实没必要，chrome 扩展只有桌面端浏览器才有)。
+- [x] 设置 devtools ，从而生成更详细的调试信息。
+- [x] `.vue` 文件中的 style 使用 `lang="scss"` 报错的问题，可以通过设置 vue-loader 解决。
