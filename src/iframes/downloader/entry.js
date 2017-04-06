@@ -1,7 +1,7 @@
 /**
  * Created by mengqingshen on 2016/12/14.
  */
-import "babel-polyfill"
+import 'babel-polyfill'
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
@@ -15,7 +15,7 @@ import '../../common/style/common.scss'
 Vue.use(ElementUI)
 
 new Vue({
-    el: '#app',
-    store,
-    render: h => h(App)
+  el: '#app',
+  store,
+  render: h => h(App)
 })

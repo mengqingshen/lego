@@ -1,132 +1,125 @@
+/* eslint-disable no-unused-vars */
 /**
  * Created by mengqingshen on 2017/4/1.
  */
 import {
-	isObject,
-	isFunction
+  isObject,
+  isFunction
 } from './utils.js'
 
-function insertScriptToCurrentTab(file) {
-	return new Promise((resolve, reject) => {
-		_checkTabAPI() && chrome.tabs.executeScript(null, { file }, () => {
-			resolve()
-		})
-	})
+function insertScriptToCurrentTab (file) {
+  return new Promise((resolve, reject) => {
+    _checkTabAPI() && chrome.tabs.executeScript(null, { file }, () => {
+      resolve()
+    })
+  })
 }
 
-function insertCSS(file) {
-	return new Promise((resolve, reject) => {
-		_checkTabAPI() && chrome.tabs.insertCSS(null, { file }, () => {
-			resolve()
-		})
-	})
+function insertCSS (file) {
+  return new Promise((resolve, reject) => {
+    _checkTabAPI() && chrome.tabs.insertCSS(null, { file }, () => {
+      resolve()
+    })
+  })
 }
 
 /**
  * 发送消息到扩展本身（背景页、popup）
- * 
  * @param {string} command 消息主题
  * @param {*} data 消息内容
  * @return {promise}
  */
-function emitToExtension(command, data) {
-	console.log('to extension command:' + command)
-	return new Promise(resolve => {
-		_checkExtensionAPI() && chrome.extension.sendRequest(null, { command, data}, resolve)
-	})
+function emitToExtension (command, data) {
+  return new Promise(resolve => {
+    _checkExtensionAPI() && chrome.extension.sendRequest(null, { command, data }, resolve)
+  })
 }
 
 /**
  * 发送信息到浏览器窗口当前的 tab
- * 
  * @param {string} command 消息主题
  * @param {*} data 消息内容
  * @return {promise}
  */
-function emitToCurrentTab(command, data) {
-	console.log('to tab command:' + command)
-	console.log(data)
-	return new Promise(resolve => {
-		return getCurrentTab().then(({ id }) => {
-			return emitToTab(id, command, data)
-		}).then(resolve)
-	})
+function emitToCurrentTab (command, data) {
+  return new Promise(resolve => {
+    return getCurrentTab().then(({ id }) => {
+      return emitToTab(id, command, data)
+    }).then(resolve)
+  })
 }
 
 /**
  * 发送信息到浏览器窗口指定的 tab
- * 
  * @param {number} tabId
  * @param {string} command 消息主题
  * @param {*} data 消息内容
  * @return {promise}
  */
-function emitToTab(tabId, command, data) {
-	return new Promise(resolve => {
-		_checkTabAPI && chrome.tabs.sendRequest(tabId, { command, data }, resolve)
-	})
+function emitToTab (tabId, command, data) {
+  return new Promise(resolve => {
+    _checkTabAPI && chrome.tabs.sendRequest(tabId, { command, data }, resolve)
+  })
 }
 
 /**
  * 获取当前的选项卡
  * @return{promise}
  */
-function getCurrentTab() {
-	return new Promise(resolve => {
-		_checkTabAPI() && chrome.tabs.getSelected(null, resolve)
-	})
+function getCurrentTab () {
+  return new Promise(resolve => {
+    _checkTabAPI() && chrome.tabs.getSelected(null, resolve)
+  })
 }
 
 /**
  * 获取或战中页面的链接
- * 
  * @param {string} path
  */
-function generateURL(path) {
-	if (_checkExtensionAPI()) {
-		return chrome.extension.getURL(path)
-	}
+function generateURL (path) {
+  if (_checkExtensionAPI()) {
+    return chrome.extension.getURL(path)
+  }
 }
 
 /**
  * 注册事件
- * 
  * @param {object} listeners 事件和回调的配置信息
  */
 function on (listeners) {
-	if (!isObject (listeners) || listeners === null) {
-		return false
-	}
-	_checkExtensionAPI() && chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
-		console.log(request)
-		const command = request.command
-		const data = request.data
-		let listener = null
-		if (command in listeners) {
-			listener = listeners[command]
-			Promise.resolve(listener(data)).then(sendResponse)
-		}
-	})
+  if (!isObject(listeners) || listeners === null) {
+    return false
+  }
+  _checkExtensionAPI() && chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
+    console.log(request)
+    const command = request.command
+    const data = request.data
+    let listener = null
+    if (command in listeners) {
+      listener = listeners[command]
+      Promise.resolve(listener(data)).then(sendResponse)
+    }
+  })
 }
 
-function _checkExtensionAPI() {
-	return typeof chrome.extension === 'object'
+function _checkExtensionAPI () {
+  return typeof chrome.extension === 'object'
 }
-function _checkTabAPI() {
-	return typeof chrome.tabs === 'object'
+function _checkTabAPI () {
+  return typeof chrome.tabs === 'object'
 }
 
-function _err(errMsg) {
-	throw new Error('')
+function _err (errMsg) {
+  throw new Error('')
 }
 
 export default {
-	emitToExtension,
-	emitToCurrentTab,
-	emitToTab,
-	insertCSS,
-	insertScriptToCurrentTab,
-	getCurrentTab,
-	generateURL,
-	on
+  emitToExtension,
+  emitToCurrentTab,
+  emitToTab,
+  insertCSS,
+  insertScriptToCurrentTab,
+  getCurrentTab,
+  generateURL,
+  on
 }

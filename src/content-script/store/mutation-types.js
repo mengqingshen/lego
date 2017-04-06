@@ -12,4 +12,3 @@ export const MA_TOGGLE_SUB_WIN = 'MA_TOGGLE_SUB_WIN'
 /* downloader */
 
 /* qrcode */
-

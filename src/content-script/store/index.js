@@ -15,6 +15,6 @@ export default new Vuex.Store({
   modules: {
     main,
     downloader,
-    qrcode,
+    qrcode
   }
 })

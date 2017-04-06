@@ -1,36 +1,36 @@
 @import '../common/style/modules/_element-colors';
 #seanway-window {
-    .img-wrap {
-        width: 20px;
-        text-align: center;
-        height: 20px;
-        line-height: 20px;
-        display: inline-block;
-        border-radius: 10px;
-        transition: all .4s ease;
-        cursor: pointer;
-        background: $color-black;
-        position: relative;
-        overflow: hidden;
-        &:hover {
-            background: $color-white;
-            img {
-                filter: invert(0%);
-            }
-        }
-        img {
-            filter: invert(100%);
-            width: 80%;
-            display: inline-block;
-            vertical-align: middle;
-            height: 80%;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }
+  .img-wrap {
+    width: 20px;
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+    border-radius: 10px;
+    transition: all .4s ease;
+    cursor: pointer;
+    background: $color-black;
+    position: relative;
+    overflow: hidden;
+    &:hover {
+      background: $color-white;
+      img {
+        filter: invert(0%);
+      }
     }
+    img {
+      filter: invert(100%);
+      width: 80%;
+      display: inline-block;
+      vertical-align: middle;
+      height: 80%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+  }
 }
 

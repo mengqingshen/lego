@@ -2,30 +2,30 @@
 @import "./partials/_buttons";
 
 .clearfix {
-	*zoom: 1;
+  *zoom: 1;
 }
 .clearfix:before {
-	display: table;
-	content: '';
+  display: table;
+  content: '';
 }
 .clearfix:after {
-	clear: both;
+  clear: both;
 }
 .iconfont-wrap {
-	display: inline-block;
-	line-height: 30px;
-	height: 30px;
-	width: 30px;
-	text-align: center;
-	border-radius: 15px;
-	transition:  background-color .4s ease;
-	i {
-		color: $color-gray;
-	}
-	&:hover {
-		background-color: $color-dark-white;
-		i {
-			color: $color-black;
-		}
-	}
+  display: inline-block;
+  line-height: 30px;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  border-radius: 15px;
+  transition:  background-color .4s ease;
+  i {
+    color: $color-gray;
+  }
+  &:hover {
+    background-color: $color-dark-white;
+    i {
+      color: $color-black;
+    }
+  }
 }
