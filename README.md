@@ -15,13 +15,19 @@
 ## 3 简单列下技术要点...
 ### 构造相关
 + webpack2
++ webpack-dev-server
++ Babel
++ browser-sync
 + npm3
 
 ### 框架
 + Vue2
 + Vuex2
++ ElementUI
 + jQuery3
 + Animate.css
++ QRcode
++ Velocity
 
 ### 预处理
 + SASS
