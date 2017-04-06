@@ -21,21 +21,21 @@
 + npm3
 
 ### 框架
-+ Vue2
-+ Vuex2
-+ ElementUI
-+ jQuery3
-+ Animate.css
-+ QRcode
-+ Velocity
++ [Vue2](http://cn.vuejs.org/)
++ [Vuex2](https://vuex.vuejs.org/)
++ [ElementUI](http://element.eleme.io/)
++ [jQuery3](https://jquery.com/)
++ [Animate.css](https://daneden.github.io/animate.css/)
++ [QRcode](https://www.npmjs.com/package/qrcode)
++ [Velocity](http://velocityjs.org/)
 
 ### 预处理
-+ SASS
-+ PostCSS
-+ PUG
++ [SASS](http://sass-lang.com/)
++ [PostCSS](https://github.com/postcss)
++ [pug](https://pugjs.org/api/getting-started.html)
 
 ### 其它
-+ ESLint
++ [ESLint](http://eslint.cn/)
 
 ## 4 开发遇到的问题总结几个，万一有人感兴趣呢...
 
