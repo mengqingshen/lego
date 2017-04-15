@@ -4,9 +4,9 @@
   "author": "eli01linux@aliyun.com",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "watch": "cross-env NODE_ENV=production webpack --progress --hide-modules -w",
+    "dev": "webpack-dev-server --content-base ./src --open --inline --hot --compress --history-api-fallback --config webpack.dev.config.js",
+    "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
+    "watch": "webpack --progress --hide-modules --config webpack.prod.config.js -w",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
@@ -71,6 +71,7 @@
     "vue-style-loader": "^1.0.0",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1",
+    "webpack-merge": "^4.1.0",
     "webpack-zepto": "0.0.1"
   }
 }
