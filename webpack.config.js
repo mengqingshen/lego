@@ -15,8 +15,8 @@ module.exports = {
     'background/index': './background/entry.js',
     'popup/index': './popup/entry.js',
     'content-script/index': './content-script/entry.js',
-    'iframes/downloader/index': './iframes/downloader/entry.js',
-    'iframes/qrcode/index': './iframes/qrcode/entry.js',
+    'pages/downloader/index': './pages/downloader/entry.js',
+    'pages/qrcode/index': './pages/qrcode/entry.js',
     vendor: ['vue', 'vuex', 'jquery']
   },
   output: {
@@ -60,7 +60,7 @@ module.exports = {
             })
           }
         },
-        include: /iframes/
+        include: /pages/
       },
 
       // options 中的配置不能省略（因为默认情况下 .vue 文件中只能 lang="sass"，lang="scss" 会报错）
@@ -76,7 +76,7 @@ module.exports = {
             ]
           }
         },
-        exclude: /iframes/
+        exclude: /pages/
       },
       {
         test: /\.js$/,
@@ -178,17 +178,17 @@ module.exports = {
       hash: true
     }),
     new HtmlWebpackPlugin({
-      filename: 'iframes/downloader/index.html',
+      filename: 'pages/downloader/index.html',
       cache: true,
-      chunks: ['vendor', 'iframes/downloader/index'],
-      template: 'iframes/downloader/index.pug',
+      chunks: ['vendor', 'pages/downloader/index'],
+      template: 'pages/downloader/index.pug',
       hash: true
     }),
     new HtmlWebpackPlugin({
-      filename: 'iframes/qrcode/index.html',
+      filename: 'pages/qrcode/index.html',
       cache: true,
-      chunks: ['vendor', 'iframes/qrcode/index'],
-      template: 'iframes/qrcode/index.pug',
+      chunks: ['vendor', 'pages/qrcode/index'],
+      template: 'pages/qrcode/index.pug',
       hash: true
     }),
     new webpack.optimize.CommonsChunkPlugin({

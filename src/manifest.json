@@ -29,8 +29,8 @@
     "common/common.js",
     "popup/index.html",
     "content-script/index.js",
-    "iframes/downloader/index.html",
-    "iframes/qrcode/index.html",
+    "pages/downloader/index.html",
+    "pages/qrcode/index.html",
     "chunks/*.js"
   ]
 }

@@ -2,7 +2,7 @@
 <script>
   import {
     crawler
-  } from '../../iframes/downloader/api/crawl'
+  } from '../../pages/downloader/api/crawl'
   import extension from '../../api/chrome-extension'
   export default {
     components: {
@@ -11,7 +11,7 @@
       }
     },
     computed: {
-      src: () => extension.generateURL('iframes/downloader/index.html')
+      src: () => extension.generateURL('pages/downloader/index.html')
     },
     created () {
       extension.on({

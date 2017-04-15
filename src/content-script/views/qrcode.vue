@@ -11,7 +11,7 @@
       }
     },
     computed: {
-      src: () => extension.generateURL('iframes/qrcode/index.html')
+      src: () => extension.generateURL('pages/qrcode/index.html')
     }
   }
 </script>
