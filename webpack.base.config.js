@@ -11,12 +11,13 @@ module.exports = {
   cache: true,
   context: path.resolve(__dirname, './src'),
   entry: {
+    'vendor': ['vue', 'vuex', 'jquery'],
     'background/index': './background/entry.js',
     'popup/index': './popup/entry.js',
     'content-script/index': './content-script/entry.js',
     'pages/downloader/index': './pages/downloader/entry.js',
     'pages/qrcode/index': './pages/qrcode/entry.js',
-    'vendor': ['vue', 'vuex', 'jquery']
+    'pages/resume/index': './pages/resume/main.js'
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -27,12 +28,12 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, './src'),  // New
   },
-  // 指定可以被 import 的文件后缀
-  resolve: {
-    extensions: ['.js', '.vue', '.json', '.sass', 'scss', '.pug', '.css']
-  },
   module: {
     rules: [
+      {
+        test: /iview.src.*?js$/,
+        loader: 'babel'
+      },
       {
         enforce: 'pre',
         test: /\.vue$/,
@@ -190,6 +191,13 @@ module.exports = {
       template: 'pages/qrcode/index.pug',
       hash: true
     }),
+    new HtmlWebpackPlugin({
+      filename: 'pages/resume/index.html',
+      cache: true,
+      chunks: ['vendor', 'pages/resume/index'],
+      template: 'pages/resume/templates/index.pug',
+      hash: true
+    }),
     new webpack.optimize.CommonsChunkPlugin({
         cache: true,
         names: ['vendor'],
@@ -198,5 +206,12 @@ module.exports = {
     new webpack.BannerPlugin("这里是打包文件头部注释！"),
     extractCommomForContentCSS,
     extractForIframes
-  ]
+  ],
+  resolve: {
+    // 指定可以被 import 的文件后缀
+    extensions: ['.js', '.vue', '.json', '.sass', 'scss', '.pug', '.css'],
+    alias: {
+      'vue': 'vue/dist/vue.min.js'
+    }
+  }
 }

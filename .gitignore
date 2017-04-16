@@ -1,4 +1,9 @@
 /node_modules
-/dist
-/.idea
+dist
+dist/*
+.idea
+.idea/
+.DS_Store
 node-debug.log
+src/config/*.tmp
+src/config/env.js
