@@ -14,13 +14,15 @@ Vue.use(iView)
 
 // 路由配置
 const RouterConfig = {
-  mode: 'history',
+  mode: 'hash',
   routes: Routers
 }
 
+console.log(RouterConfig)
 const router = new VueRouter(RouterConfig)
 
 router.beforeEach((to, from, next) => {
+  console.log(to)
   iView.LoadingBar.start()
   Util.title(to.meta.title)
   next()
