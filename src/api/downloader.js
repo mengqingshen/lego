@@ -80,7 +80,7 @@ export default class Crawler {
    * @returns{array} 找到的所有图片的 URL 组成的数组
    */
   getImgUrlsByCSSSelector (cssSelector) {
-    const imgDoms = $(cssSelector + ':not(#seanway-window img)')
+    const imgDoms = $(cssSelector + ':not(#lego-window img)')
     if (imgDoms) {
       return Array.from(imgDoms).filter(img => !!img.src).map(function (img) {
         return [

@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-default/index.css'
 import App from './views/app.vue'
 import store from './store'
 
-import '../../content-css/seanway.scss'
+import '../../content-css/lego.scss'
 import '../../assets/iconfont/iconfont.css'
 import '../../common/style/common.scss'
 

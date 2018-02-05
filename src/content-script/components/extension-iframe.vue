@@ -8,7 +8,7 @@
     frameborder="0",
     seamless="seamless",
     scrolling="no",
-    id="seanway-iframe",
+    id="lego-iframe",
     :style="{width: sizeMA.w, height: sizeMA.h}")
 </template>
 <script>

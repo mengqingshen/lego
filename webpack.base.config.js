@@ -4,8 +4,8 @@ const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const extractCommomForContentCSS = new ExtractTextPlugin("content-css/common.css")
-const extractForIframes = new ExtractTextPlugin("[name].css")
+const extractCommomForContentCSS = new ExtractTextPlugin('content-css/common.css')
+const extractForIframes = new ExtractTextPlugin('[name].css')
 
 module.exports = {
   cache: true,
@@ -23,10 +23,10 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/',
     filename: '[name].js',
-    chunkFilename: "/chunks/[name].js"
+    chunkFilename: 'chunks/[name].js'
   },
   devServer: {
-    contentBase: path.resolve(__dirname, './src'),  // New
+    contentBase: path.resolve(__dirname, './src')  // New
   },
   module: {
     rules: [
@@ -42,9 +42,9 @@ module.exports = {
       },
       {
         test: require.resolve('jquery'),
-        loader: "expose-loader?$!expose-loader?jQuery"
+        loader: 'expose-loader?$!expose-loader?jQuery'
       },
-      
+
       // 提取在 iframe 显示的页面的 css 到单独的文件。期望能利用浏览器的缓存，并降低 js 消耗的资源（并没对比分析）。
       {
         test: /\.vue$/,
@@ -98,13 +98,13 @@ module.exports = {
 
       // 针对页面中窗口的通用样式需要提取出单独的文件，从而通过 insertCSS 注入到页面
       {
-        test: /seanway\.scss$/,
+        test: /lego\.scss$/,
         use: extractCommomForContentCSS.extract([
           'css-loader',
           'postcss-loader',
           'sass-loader'
         ]),
-        include: /content-css/,
+        include: /content-css/
       },
       {
         test: /\.s[a|c]ss$/,
@@ -162,8 +162,8 @@ module.exports = {
       }
     ]),
     new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery"
+      $: 'jquery',
+      jQuery: 'jquery'
     }),
     new HtmlWebpackPlugin({
       filename: 'background/index.html',
@@ -199,11 +199,11 @@ module.exports = {
       hash: true
     }),
     new webpack.optimize.CommonsChunkPlugin({
-        cache: true,
-        names: ['vendor'],
-        filename: "common/common.js"
+      cache: true,
+      names: ['vendor'],
+      filename: 'common/common.js'
     }),
-    new webpack.BannerPlugin("这里是打包文件头部注释！"),
+    new webpack.BannerPlugin('这里是打包文件头部注释！'),
     extractCommomForContentCSS,
     extractForIframes
   ],

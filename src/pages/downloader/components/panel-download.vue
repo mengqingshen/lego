@@ -139,7 +139,7 @@
                 @keyup.enter="handleSearchWithinDownload",
                 autofocus,
                 placeholder="输入正则进行匹配")
-              button.seanway-btn.seanway-btn-tiny(
+              button.lego-btn.lego-btn-tiny(
                 @click="handleSearchWithinDownload") 查找
     transition(
       mode: 'out-in',

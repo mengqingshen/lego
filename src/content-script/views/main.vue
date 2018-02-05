@@ -68,14 +68,14 @@
     #seayway-mask(v-show="isMaskMA && !isHideMA")
     draggable
       transition(name="slide-fade")
-        #seanway-window(v-show="!isHideMA")
+        #lego-window(v-show="!isHideMA")
           .top-bar
             span.img-wrap(@click="toggleMaskMA")
               img(v-show="isMaskMA", src="../assets/umbrella.png")
               img(v-show="!isMaskMA", src="../assets/si-glyph-umbrella-close.png")
             span.img-wrap(@click="hideWinMA")
               img(src="../assets/close.png")
-          .seanway-content-container
+          .lego-content-container
             transition(
               name="animate-flipY",
               mode="out-in",
@@ -96,10 +96,10 @@
     background-color: rgba(0, 0, 0, .3);
     z-index: 999;
   }
-  #seanway-iframe {
+  #lego-iframe {
     cursor: auto;
   }
-  #seanway-window {
+  #lego-window {
     .top-bar {
       font-size: 0;
       text-align: right;

@@ -1,5 +1,5 @@
 {
-  "name": "seanway",
+  "name": "lego",
   "description": "sean's chrome extension",
   "author": "eli01linux@aliyun.com",
   "private": true,
@@ -44,7 +44,6 @@
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^1.0.6",
     "css-loader": "^0.23.1",
-    "element-ui": "^1.0.2",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.0.0",
     "eslint-loader": "^1.7.1",
