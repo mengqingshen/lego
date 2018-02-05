@@ -45,8 +45,9 @@
           this.toggleSubWinMA(subWinName)
           this.showWinMA()
           return this.curSubWinMA
-        }
-      })
+        },
+        'get-href': () => window.location.href
+      }, 'script-main')
     },
     methods: {
       ...mapActions([

@@ -18,7 +18,7 @@
         'fire-crawl': data => {
           return crawler.getImgUrlsByCSSSelector(data.cssSelector)
         }
-      })
+      }, 'script-downloader')
     }
   }
 </script>

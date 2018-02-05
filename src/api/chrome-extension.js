@@ -58,7 +58,7 @@ function emitToCurrentTab (command, data) {
  */
 function emitToTab (tabId, command, data) {
   return new Promise(resolve => {
-    _checkTabAPI && chrome.tabs.sendRequest(tabId, { command, data }, resolve)
+    _checkTabAPI && chrome.tabs.sendRequest(tabId, { command, data: data || {} }, resolve)
   })
 }
 
@@ -86,12 +86,12 @@ function generateURL (path) {
  * 注册事件
  * @param {object} listeners 事件和回调的配置信息
  */
-function on (listeners) {
+function on (listeners, monitor) {
   if (!isObject(listeners) || listeners === null) {
     return false
   }
   _checkExtensionAPI() && chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
-    console.log(request)
+    console.log(monitor, request)
     const command = request.command
     const data = request.data
     let listener = null

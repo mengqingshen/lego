@@ -1,4 +1,4 @@
-import crawl, {
+import {
   crawler,
   getStringModeOfRegExp
 } from '../../api/crawl'
@@ -17,7 +17,7 @@ const state = {
   currentPanel: 'search', // search, collection, download
   selectorsHistory: [],
   selectorsCollection: [],
-  selectorsRecommanded:  [],
+  selectorsRecommanded: [],
   imgs: [
     // ['http://tu.zmzjstu.com/ftp/2017/0206/b_eeb77cea52c6472865f623a26865c185.jg', { w: 100, h: 61, checked: true, downloaded: false, hide: false}],
     // ['http://tu.zmzjstu.com/ftp/2017/0302/s_8bb968c1fc3937e4b33b0b70fa90b779.jg', { w: 100, h: 46, checked: true, downloaded: false, hide: false}],

@@ -18,7 +18,7 @@
             return extension.emitToCurrentTab('show-sub-window', subWinName)
           })
         }
-      })
+      }, 'background')
     }
   }
 </script>
