@@ -18,7 +18,8 @@
     "https://*/*"
   ],
   "background": {
-    "page": "background/index.html"
+    "page": "background/index.html",
+    "persistent": true
   },
   "icons": {
       "48": "assets/way.png"

@@ -7,12 +7,10 @@
   ],
   "plugins": [
       [
-        "component", [
-          {
-            "libraryName": "element-ui",
-            "styleLibraryName": "theme-default"
-          }
-        ]
+        "component", {
+          "libraryName": "element-ui",
+          "styleLibraryName": "theme-chalk"
+        }
       ],
       "transform-runtime",
       "transform-vue-jsx",

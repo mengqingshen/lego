@@ -17,7 +17,7 @@ module.exports = {
     'content-script/index': './content-script/entry.js',
     'pages/downloader/index': './pages/downloader/entry.js',
     'pages/qrcode/index': './pages/qrcode/entry.js',
-    'pages/resume/index': './pages/resume/main.js'
+    'pages/resume/index': './pages/resume/entry.js'
   },
   output: {
     path: path.resolve(__dirname, './dist'),

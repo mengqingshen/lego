@@ -6,6 +6,7 @@ import Vuex from 'vuex'
 import main from './modules/main'
 import downloader from './modules/downloader'
 import qrcode from './modules/qrcode'
+import cookie from './modules/cookie'
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
@@ -15,6 +16,7 @@ export default new Vuex.Store({
   modules: {
     main,
     downloader,
-    qrcode
+    qrcode,
+    cookie
   }
 })

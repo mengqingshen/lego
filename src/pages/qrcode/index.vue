@@ -9,7 +9,6 @@
   export default {
     mounted () {
       extension.emitToCurrentTab('get-href').then((href) => {
-        console.log('get-window', href)
         if (!href) return
         QRCode.toCanvas(this.$refs.qrcode, href, error => {
           if (error) {

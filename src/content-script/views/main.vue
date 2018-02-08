@@ -19,6 +19,9 @@
       },
       'qrcode': (resolve, reject) => {
         resolve(require('./qrcode'))
+      },
+      'cookie': (resolve, reject) => {
+        resolve(require('./cookie'))
       }
     },
     computed: {
@@ -66,7 +69,7 @@
 
 <template lang="pug">
   div
-    #seayway-mask(v-show="isMaskMA && !isHideMA")
+    #lego-mask(v-show="isMaskMA && !isHideMA")
     draggable
       transition(name="slide-fade")
         #lego-window(v-show="!isHideMA")
@@ -88,7 +91,7 @@
 </template>
 
 <style lang="scss">
-  #seayway-mask {
+  #lego-mask {
     position: fixed;
     top: 0;
     bottom: 0;

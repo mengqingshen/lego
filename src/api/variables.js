@@ -7,6 +7,11 @@ export const ALL_SUB_WINS = [
   {
     name: 'qrcode',
     icon: 'icon-erweima',
-    desc: 'URL二维码'
+    desc: 'URL 二维码'
+  },
+  {
+    name: 'cookie',
+    icon: 'icon-cookie',
+    desc: 'cookie 搬运工'
   }
 ]
