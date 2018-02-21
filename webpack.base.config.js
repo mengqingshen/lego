@@ -1,11 +1,34 @@
 const path = require('path')
-const projectRoot = path.resolve(__dirname, '../')
+const fs = require('fs')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const findEntries = require('./util/find-entries')
+
 const extractCommomForContentCSS = new ExtractTextPlugin('content-css/common.css')
 const extractForIframes = new ExtractTextPlugin('[name].css')
+
+const pageEntries = {}
+const pageHtmls = []
+
+findEntries(path.join(__dirname, 'src/pages')).forEach((path) => {
+  const match = path.match(/src\/pages\/(.*)\/entry\.js/)
+  const varPath = match[1]
+  pageEntries[`pages/${varPath}/index`] = `./pages/${varPath}/entry.js`
+
+  const configPath = path.replace('entry.js', 'config.js')
+  const title = fs.existsSync(configPath) ? require(configPath).title : 'lego'
+
+  pageHtmls.push(new HtmlWebpackPlugin({
+    filename: `pages/${varPath}/index.html`,
+    cache: true,
+    chunks: ['vendor', `pages/${varPath}/index`],
+    template: `common/templates/page.pug`,
+    title,
+    hash: true
+  }))
+})
 
 module.exports = {
   cache: true,
@@ -15,9 +38,7 @@ module.exports = {
     'background/index': './background/entry.js',
     'popup/index': './popup/entry.js',
     'content-script/index': './content-script/entry.js',
-    'pages/downloader/index': './pages/downloader/entry.js',
-    'pages/qrcode/index': './pages/qrcode/entry.js',
-    'pages/resume/index': './pages/resume/entry.js'
+    ...pageEntries
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -26,7 +47,9 @@ module.exports = {
     chunkFilename: 'chunks/[name].js'
   },
   devServer: {
-    contentBase: path.resolve(__dirname, './src')  // New
+    contentBase: path.resolve(__dirname, './src'),  // New
+    historyApiFallback: true,
+    noInfo: true
   },
   module: {
     rules: [
@@ -146,10 +169,6 @@ module.exports = {
       }
     ]
   },
-  devServer: {
-    historyApiFallback: true,
-    noInfo: true
-  },
   devtool: 'cheap-module-source-map',
   plugins: [
     new CopyWebpackPlugin([
@@ -177,33 +196,13 @@ module.exports = {
       template: 'popup/index.pug',
       hash: true
     }),
-    new HtmlWebpackPlugin({
-      filename: 'pages/downloader/index.html',
-      cache: true,
-      chunks: ['vendor', 'pages/downloader/index'],
-      template: 'pages/downloader/index.pug',
-      hash: true
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'pages/qrcode/index.html',
-      cache: true,
-      chunks: ['vendor', 'pages/qrcode/index'],
-      template: 'pages/qrcode/index.pug',
-      hash: true
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'pages/resume/index.html',
-      cache: true,
-      chunks: ['vendor', 'pages/resume/index'],
-      template: 'pages/resume/templates/index.pug',
-      hash: true
-    }),
+    ...pageHtmls,
     new webpack.optimize.CommonsChunkPlugin({
       cache: true,
       names: ['vendor'],
       filename: 'common/common.js'
     }),
-    new webpack.BannerPlugin('这里是打包文件头部注释！'),
+    new webpack.BannerPlugin('http://notehub.mengqingshen.com！'),
     extractCommomForContentCSS,
     extractForIframes
   ],
