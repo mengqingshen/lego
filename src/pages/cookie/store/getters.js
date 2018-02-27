@@ -1,4 +1,8 @@
 /**
  * Created by mengqingshen on 2018/02/05.
  */
-export default {}
+export default {
+  domain (state) {
+    return (new URL(state.url)).hostname
+  }
+}

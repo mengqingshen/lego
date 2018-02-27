@@ -210,7 +210,8 @@ module.exports = {
     // 指定可以被 import 的文件后缀
     extensions: ['.js', '.vue', '.json', '.sass', 'scss', '.pug', '.css'],
     alias: {
-      'vue': 'vue/dist/vue.min.js'
+      'vue': 'vue/dist/vue.min.js',
+      '@api': path.join(__dirname, 'src/api')
     }
   }
 }

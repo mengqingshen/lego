@@ -49,7 +49,15 @@
           this.showWinMA()
           return this.curSubWinMA
         },
-        'get-href': () => window.location.href
+        'get-href': () => window.location.href,
+        'get-shortcut-icon': () => {
+          const link = document.querySelector('link[rel="shortcut icon"]')
+          if (link) {
+            return link.href
+          }
+          const url = new URL(window.location.href)
+          return `${url.origin}/favicon.ico`
+        }
       }, 'script-main')
     },
     methods: {

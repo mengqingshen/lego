@@ -3,7 +3,7 @@
 */
 const webpack = require('webpack')
 const merge = require('webpack-merge')
-const webpackBaseConfig = require('./webpack.base.config.js')
+const webpackBaseConfig = require('./webpack.config.base.js')
 const fs = require('fs')
 
 fs.open('./src/config/env.js', 'w', (err, fd) => {

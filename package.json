@@ -4,9 +4,9 @@
   "author": "eli01linux@aliyun.com",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --content-base ./src --open --inline --hot --compress --history-api-fallback --config webpack.dev.config.js",
+    "dev": "webpack-dev-server --content-base ./src --open --inline --hot --compress --history-api-fallback --config webpack.config.dev.js",
     "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
-    "watch": "webpack --progress --hide-modules --config webpack.prod.config.js -w",
+    "watch": "webpack --progress --hide-modules --config webpack.config.dev.js -w",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
@@ -17,10 +17,12 @@
     "iscroll": "^5.2.0",
     "iview": "^2.0.0-rc.10",
     "jquery": "^3.1.1",
+    "material-design-icons": "^3.0.1",
     "qrcode": "^0.8.0",
     "velocity-animate": "^1.4.3",
     "vue": "^2.1.10",
-    "vue-router": "^2.0.3",
+    "vue-material": "^1.0.0-beta-7",
+    "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.1.10",
     "vuex": "^2.0.0",
     "webpack": "^2.2.1",

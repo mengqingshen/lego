@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
-const webpackBaseConfig = require('./webpack.base.config.js')
+const webpackBaseConfig = require('./webpack.config.base.js')
 const fs = require('fs')
 
 fs.open('./src/config/env.js', 'w', (err, fd) => {
@@ -21,7 +21,7 @@ module.exports = merge(webpackBaseConfig, {
       {
         host: 'localhost',
         port: 10040,
-        proxy: 'http://localhost:8080/'
+        proxy: 'http://localhost:10040/'
       },
       {
         reload: false

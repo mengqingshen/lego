@@ -9,7 +9,10 @@ import {
 
 function insertScriptToCurrentTab (file) {
   return new Promise((resolve, reject) => {
-    _checkTabAPI() && chrome.tabs.executeScript(null, { file }, () => {
+    if (!_checkTabAPI()) {
+      return resolve()
+    }
+    chrome.tabs.executeScript(null, { file }, () => {
       resolve()
     })
   })
@@ -17,7 +20,10 @@ function insertScriptToCurrentTab (file) {
 
 function insertCSS (file) {
   return new Promise((resolve, reject) => {
-    _checkTabAPI() && chrome.tabs.insertCSS(null, { file }, () => {
+    if (!_checkTabAPI()) {
+      return resolve()
+    }
+    chrome.tabs.insertCSS(null, { file }, () => {
       resolve()
     })
   })
@@ -43,6 +49,9 @@ function emitToExtension (command, data) {
  */
 function emitToCurrentTab (command, data) {
   return new Promise(resolve => {
+    if (!_checkTabAPI()) {
+      return resolve()
+    }
     return getCurrentTab().then(({ id }) => {
       return emitToTab(id, command, data)
     }).then(resolve)
@@ -57,8 +66,11 @@ function emitToCurrentTab (command, data) {
  * @return {promise}
  */
 function emitToTab (tabId, command, data) {
-  return new Promise(resolve => {
-    _checkTabAPI && chrome.tabs.sendRequest(tabId, { command, data: data || {} }, resolve)
+  return new Promise((resolve, reject) => {
+    if (!_checkTabAPI()) {
+      return resolve()
+    }
+    chrome.tabs.sendRequest(tabId, { command, data: data || {} }, resolve)
   })
 }
 
@@ -67,8 +79,11 @@ function emitToTab (tabId, command, data) {
  * @return{promise}
  */
 function getCurrentTab () {
-  return new Promise(resolve => {
-    _checkTabAPI() && chrome.tabs.getSelected(null, resolve)
+  return new Promise((resolve, reject) => {
+    if (!_checkTabAPI()) {
+      return resolve()
+    }
+    chrome.tabs.getSelected(null, resolve)
   })
 }
 

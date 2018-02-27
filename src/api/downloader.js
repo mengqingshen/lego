@@ -40,21 +40,6 @@ export default class Crawler {
     })
   }
 
-  getBase64 (blobUri) {
-    return new Promise((resolve, reject) => {
-      const img = new Image(blobUri)
-      img.onload = () => {
-        const canvas = document.createElement('canvas')
-        canvas.width = img.with
-        canvas.height = img.height
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        resolve(canvas.toDataURL('image/png'))
-      }
-      img.src = blobUri
-    })
-  }
-
   getHref (uri) {
     return new Promise((resolve, reject) => {
       if (/^blob/.test(uri)) {

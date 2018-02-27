@@ -9,13 +9,13 @@
   },
   "author": "mengqingshen",
   "permissions": [
+    "cookies",
     "storage",
     "background",
     "activeTab",
     "tabs",
     "unlimitedStorage",
-    "http://*/**",
-    "https://*/*"
+    "*://*/**"
   ],
   "background": {
     "page": "background/index.html",
@@ -30,8 +30,7 @@
     "common/common.js",
     "popup/index.html",
     "content-script/index.js",
-    "pages/downloader/index.html",
-    "pages/qrcode/index.html",
+    "pages/**",
     "chunks/*.js"
   ]
 }
