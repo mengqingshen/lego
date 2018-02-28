@@ -18,21 +18,30 @@
     created () {
       this.init().then((data) => {
         if (data && data[1]) {
-          const origin = data[0]
+          const url = data[0]
           const map = data[1]
-          if (origin && map) {
+          console.log(url, map)
+          const urlObj = new URL(url)
+          if (url && map) {
+            // 是否是被模拟者
             if (map.some((originItem) => {
-              return originItem.origin === origin
+              console.log(originItem.url, urlObj.origin)
+              return originItem.url === urlObj.origin
             })) {
               return this.$router.push({ name: 'origin' })
             }
+            // 是否是模拟者
             if (map.some((originItem) => {
-              return originItem && originItem.cheaterList && originItem.cheaterList.includes(origin)
+              return originItem && originItem.cheaterList && originItem.cheaterList.find(({ origin }) => {
+                console.log(origin, urlObj.origin)
+                return origin === urlObj.origin
+              })
             })) {
               return this.$router.push({ name: 'cheater' })
             }
           }
         }
+        // 都不是
         this.$router.push({ name: 'choose-role' })
       })
     },
@@ -46,6 +55,7 @@
       }).resize()
     },
     computed: {
+      ...mapState(['origin']),
       pageTitle () {
         return (this.$router.meta || {}).pageTitle || ''
       }

@@ -22,6 +22,7 @@ import CheaterSteps from './views/cheater-steps'
 import ChooseRole from './views/choose-role'
 import OriginSteps from './views/origin-steps'
 import Origin from './views/origin'
+import Cheater from './views/cheater'
 
 Vue.config.debug = true
 
@@ -33,6 +34,22 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'hash',
   routes: [
+    {
+      path: '/cheater',
+      name: 'cheater',
+      component: Cheater,
+      meta: {
+        pageTitle: '模仿者'
+      }
+    },
+    {
+      path: '/origin',
+      name: 'origin',
+      component: Origin,
+      meta: {
+        pageTitle: '被模仿者'
+      }
+    },
     {
       path: '/cheater-steps',
       name: 'cheater-steps',
@@ -55,14 +72,6 @@ const router = new VueRouter({
       component: ChooseRole,
       meta: {
         pageTitle: '选择角色'
-      }
-    },
-    {
-      path: '/origin',
-      name: 'origin',
-      component: Origin,
-      meta: {
-        pageTitle: '被模仿者'
       }
     }
   ],

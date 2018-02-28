@@ -1,6 +1,7 @@
 <script>
   import {
     mapState,
+    mapGetters,
     mapActions
   } from 'vuex'
 
@@ -11,9 +12,10 @@
     },
     computed: {
       ...mapState(['url', 'map']),
+      ...mapGetters(['origin']),
       ...mapActions(['syncCookie']),
       info () {
-        return this.map.find(({ domain }) => domain === (new URL(this.url)).hostname)
+        return this.map.find(({ url }) => url === this.origin)
       },
       status () {
         if (!this.info) {

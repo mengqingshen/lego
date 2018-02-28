@@ -5,6 +5,14 @@
 import * as types from './mutation-types'
 
 export default {
+  [types.ADD_CHEATER] (state, payload) {
+    const { selectedUrl, cheater } = payload
+    const origin = state.map.find((item) => item.url === selectedUrl)
+    if (origin) {
+      if (origin.cheaterList.find(({ origin }) => origin === cheater.origin)) return
+      origin.cheaterList.push(cheater)
+    }
+  },
   [types.SET_URL] (state, payload) {
     state.url = payload.url
   },

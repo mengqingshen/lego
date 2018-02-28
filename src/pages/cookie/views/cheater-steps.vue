@@ -1,9 +1,9 @@
 <script>
   import {
-    mapState
+    mapState, mapGetters, mapActions
   } from 'vuex'
   import {
-    getAllCookieByDomain
+    getAllCookie
   } from '../../../api/chrome-cookie'
 
   export default {
@@ -13,29 +13,50 @@
         active: 'first',
         first: false,
         second: false,
-        selectedDomain: null,
+        selectedUrl: null,
         originCookies: [],
-        selectedCookieNames: []
+        selectedCookies: []
       }
     },
     watch: {
-      selectedDomain (domain) {
-        if (domain) {
-          getAllCookieByDomain(domain).then((cookies) => {
-            console.log('cookies', cookies)
+      selectedUrl (url) {
+        if (url) {
+          getAllCookie({ url }).then((cookies) => {
             this.originCookies = cookies
+            this.selectedCookies = cookies
           })
         }
       }
     },
     computed: {
-      ...mapState(['map'])
+      ...mapState(['map']),
+      ...mapGetters(['origin']),
+      all: {
+        set (isActive) {
+          this.selectedCookies = isActive ? this.originCookies : []
+        },
+        get () {
+          return this.selectedCookies.length === this.originCookies.length
+        }
+      }
     },
     methods: {
+      ...mapActions(['addCheater']),
       setDone (id, index) {
         this[id] = true
         if (index) {
           this.active = index
+        }
+        if (id === 'second') {
+          this.addCheater({
+            selectedUrl: this.selectedUrl,
+            cheater: {
+              origin: this.origin,
+              cookies: this.selectedCookies
+            }
+          }).then(() => {
+            this.$router.push({ name: 'cheater' })
+          })
         }
       }
     }
@@ -43,25 +64,25 @@
 </script>
 
 <template lang="pug">
-  div
-    md-steppers(:md-active-step.sync="active", md-vertical)
+  div#cheater-steps
+    md-steppers(:md-active-step.sync="active")
       md-step(
         id="first",
         md-label="第一步",
         md-description="要模拟的目标",
         :md-done.sync="first")
         md-list.md-triple-line
-          md-list-item(:key="originItem.domain" v-for="originItem in map")
+          md-list-item(:key="originItem.url" v-for="originItem in map")
             md-avatar
               img(:src="originItem.avatar")
             .md-list-item-text
               span {{originItem.name}}
-              span {{originItem.domain}}
+              span {{originItem.url}}
             md-radio(
-              v-model="selectedDomain",
-              :value="originItem.domain")
+              v-model="selectedUrl",
+              :value="originItem.url")
         md-button(
-          :disabled="!selectedDomain"
+          :disabled="!selectedUrl"
           class="md-raised md-primary",
           @click="setDone('first', 'second')") 继续
       md-step(
@@ -69,23 +90,26 @@
         md-label="第二步",
         md-description="要同步的 cookie",
         :md-done.sync="second")
-        md-list.md-triple-line
-          template(v-for="domainCookies in originCookies")
-            md-subheader {{domainCookies.domain}}
-            md-list-item(:key="cookie.name" v-for="cookie in domainCookies.cookies")
+        md-checkbox(v-model="all") 全选
+        md-content(style="{ maxHeight: '100px', overflow:'auto' }").md-scrollbar
+          md-list
+            md-list-item(:key="cookie" v-for="cookie in originCookies")
               md-checkbox(
-                v-model="selectedCookieNames",
-                :value="cookie.name")
-                .md-subheading {{cookie.name}}
-                .md-caption {{cookie.value}}
-                .md-caption {{cookie.domain}}
-            md-divider
+                v-model="selectedCookies",
+                :value="cookie")
+              .md-list-item-text
+                span {{cookie.name}}
+                span {{cookie.domain}}
         md-button(
+          :disabled="selectedCookies.length === 0"
           class="md-raised md-primary",
-          @click="setDone('second')") 继续
+          @click="setDone('second')") 完成
       
 </template>
 
-<style scoped lang="sass">
-
+<style lang="scss" scoped>
+  #cheater-steps .md-content {
+    max-height: 200px;
+    overflow: auto;
+  }
 </style>

@@ -5,7 +5,8 @@ import _ from 'lodash'
 import {
   SET_MAP,
   ADD_ORIGIN,
-  SET_URL
+  SET_URL,
+  ADD_CHEATER
 } from './mutation-types'
 
 import {
@@ -27,6 +28,17 @@ import config from '../config'
 const { storageNameSpace } = config
 
 export default {
+  /**
+   * 新增模拟者
+   */
+  async addCheater ({ commit }, { selectedUrl, cheater }) {
+    commit({
+      type: ADD_CHEATER,
+      selectedUrl,
+      cheater
+    })
+  },
+
   /**
    * 同步 cookie: origin -> cheater
    */
@@ -73,32 +85,28 @@ export default {
             if (data && Object.keys(data).length > 0) {
               const map = _.cloneDeep(data[storageNameSpace])
               map.forEach((originItem) => {
-                originItem.cheaterList.forEach(cheater => {
-                  cheater.cookies.forEach(domainCookies => {
-                    domainCookies.forEach((domainCookie) => {
-                      getAllCookie({ domain: domainCookie.domain }).then(originCookies => {
-                        domainCookies.cookies.forEach((cookie) => {
-                          const originCookie = originCookies.find(({ name, value }) => name === cookie.name)
-                          if (!originCookie) {
-                            cookie.status = 0 // 源站点没有对应的 cookie
-                          }
-                          else if (originCookie.value === cookie.value) {
-                            cookie.status = 1 // 和源站点对应的 cookie 一致
-                          }
-                          else {
-                            cookie.status = 2 // 和源站点对应的 cookie 不一致
-                          }
-                        })
-                      })
+                getAllCookie({ url: originItem.url }).then(cookies => {
+                  originItem.cheaterList.forEach(cheater => {
+                    cheater.cookies.forEach(cookie => {
+                      const originCookie = cookies.find(({ name, value }) => name === cookie.name)
+                      if (!originCookie) {
+                        cookie.status = 0 // 源站点没有对应的 cookie
+                      }
+                      else if (originCookie.value === cookie.value) {
+                        cookie.status = 1 // 和源站点对应的 cookie 一致
+                      }
+                      else {
+                        cookie.status = 2 // 和源站点对应的 cookie 不一致
+                      }
                     })
                   })
+                  commit({
+                    type: SET_MAP,
+                    map
+                  })
+                  resolve(map)
                 })
               })
-              commit({
-                type: SET_MAP,
-                map
-              })
-              resolve(map)
             }
           })
         })

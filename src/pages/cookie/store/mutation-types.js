@@ -9,3 +9,5 @@ export const SET_ROLE = 'SET_ROLE'
 export const SET_MAP = 'SET_MAP'
 
 export const ADD_ORIGIN = 'ADD_ORIGIN'
+
+export const ADD_CHEATER = 'ADD_CHEATER'

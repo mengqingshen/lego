@@ -4,5 +4,8 @@
 export default {
   domain (state) {
     return (new URL(state.url)).hostname
+  },
+  origin (state) {
+    return (new URL(state.url)).origin
   }
 }

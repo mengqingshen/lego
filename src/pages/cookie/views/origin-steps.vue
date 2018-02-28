@@ -1,8 +1,7 @@
 <script>
   import {
     mapState,
-    mapActions,
-    mapGetters
+    mapActions
   } from 'vuex'
 
   export default {
@@ -17,8 +16,7 @@
       }
     },
     computed: {
-      ...mapState(['url']),
-      ...mapGetters(['domain'])
+      ...mapState(['url'])
     },
     methods: {
       ...mapActions([
@@ -39,7 +37,7 @@
         if (id === 'second') {
           this.addNewOrigin({
             name: this.name,
-            domain: this.domain,
+            url: this.origin,
             avatar: this.avatar,
             cheaterList: []
           })
@@ -79,7 +77,7 @@
               img(:src="avatar")
             div(class="md-list-item-text")
               span {{name}}
-              p {{domain}}
+              p {{url}}
         md-button(
           :disabled="!avatar"
           class="md-raised md-primary",
