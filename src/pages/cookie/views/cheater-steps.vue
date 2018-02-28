@@ -6,6 +6,10 @@
     getAllCookie
   } from '../../../api/chrome-cookie'
 
+  import {
+    SET_TITLE
+  } from '../store/mutation-types'
+
   export default {
     name: 'cheater-steps',
     data () {
@@ -29,8 +33,16 @@
       }
     },
     computed: {
-      ...mapState(['map']),
+      ...mapState(['map', 'avatar']),
       ...mapGetters(['origin']),
+      name: {
+        get () {
+          return this.$store.state.title
+        },
+        set (val) {
+          this.$store.commit(SET_TITLE, val)
+        }
+      },
       all: {
         set (isActive) {
           this.selectedCookies = isActive ? this.originCookies : []
@@ -47,7 +59,7 @@
         if (index) {
           this.active = index
         }
-        if (id === 'second') {
+        if (id === 'forth') {
           this.addCheater({
             selectedUrl: this.selectedUrl,
             cheater: {
@@ -65,12 +77,18 @@
 
 <template lang="pug">
   div#cheater-steps
-    md-steppers(:md-active-step.sync="active")
+    md-steppers(:md-active-step.sync="active", md-vertical, md-linear)
       md-step(
         id="first",
-        md-label="第一步",
-        md-description="要模拟的目标",
+        md-label="要模拟的目标",
         :md-done.sync="first")
+        md-empty-state(
+          v-if="map.length === 0"
+          md-rounded,
+          md-icon="search",
+          md-size=270,
+          md-label="空空如也",
+          md-description="先去添加【被模拟者】吧")
         md-list.md-triple-line
           md-list-item(:key="originItem.url" v-for="originItem in map")
             md-avatar
@@ -87,8 +105,7 @@
           @click="setDone('first', 'second')") 继续
       md-step(
         id="second",
-        md-label="第二步",
-        md-description="要同步的 cookie",
+        md-label="要同步的 cookie",
         :md-done.sync="second")
         md-checkbox(v-model="all") 全选
         md-content(style="{ maxHeight: '100px', overflow:'auto' }").md-scrollbar
@@ -103,7 +120,35 @@
         md-button(
           :disabled="selectedCookies.length === 0"
           class="md-raised md-primary",
-          @click="setDone('second')") 完成
+          @click="setDone('second', 'third')") 继续
+      md-step(
+        id="third",
+        md-label="起一个容易区分的名字吧",
+        :md-done.sync="third")
+        md-field
+          label 名称
+          md-input(
+            v-model="name",
+            maxlength="50")
+        md-button(
+          :disabled="name === ''"
+          class="md-raised md-primary",
+          @click="setDone('third', 'forth')") 继续
+      md-step(
+        id="forth",
+        md-label="完成",
+        :md-done.sync="forth")
+        md-list(class="md-triple-line")
+          md-list-item
+            md-avatar
+              img(:src="avatar")
+            div(class="md-list-item-text")
+              span {{name}}
+              p {{origin}}
+        md-button(
+          :disabled="selectedCookies.length === 0"
+          class="md-raised md-primary",
+          @click="setDone('forth')") 完成
       
 </template>
 

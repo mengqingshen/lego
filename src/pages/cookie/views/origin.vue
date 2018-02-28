@@ -41,7 +41,7 @@
       div(:style="{ textAlign: 'center' }")
         md-icon.md-size-3x done
       .md-title(:style="{ textAlign: 'center' }") 无差异，不需要同步
-    md-list(v-if="info.cheaterList.length > 0")
+    md-list(v-if="info && info.cheaterList && info.cheaterList.length > 0")
       md-subheader 模仿者列表
       md-list-item(:key="cheater.origin" v-for="cheater of cheaterList")
         md-avatar

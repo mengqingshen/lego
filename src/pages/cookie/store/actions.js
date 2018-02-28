@@ -4,9 +4,12 @@
 import _ from 'lodash'
 import {
   SET_MAP,
-  ADD_ORIGIN,
+  SYNC_ADD_ORIGIN,
   SET_URL,
-  ADD_CHEATER
+  SYNC_ADD_CHEATER,
+  SYNC_CLEAR,
+  SET_AVATAR,
+  SET_TITLE
 } from './mutation-types'
 
 import {
@@ -25,15 +28,22 @@ import {
 } from '../../../api/utils'
 import config from '../config'
 
-const { storageNameSpace } = config
+const {
+  storageNameSpace,
+  defaultAvatar
+} = config
 
 export default {
+  clear ({ commit }) {
+    commit(SYNC_CLEAR)
+  },
+
   /**
    * 新增模拟者
    */
   async addCheater ({ commit }, { selectedUrl, cheater }) {
     commit({
-      type: ADD_CHEATER,
+      type: SYNC_ADD_CHEATER,
       selectedUrl,
       cheater
     })
@@ -68,7 +78,7 @@ export default {
    * 1. 当前 tab 地址的 domain
    * 2. 模拟者和非模拟者名单
    */
-  init ({ commit }, payload) {
+  init ({ commit, dispatch }, payload) {
     return Promise.all(
       [
         extension.emitToCurrentTab('get-href').then((href) => {
@@ -100,15 +110,24 @@ export default {
                       }
                     })
                   })
-                  commit({
-                    type: SET_MAP,
-                    map
-                  })
-                  resolve(map)
                 })
               })
+              commit({
+                type: SET_MAP,
+                map
+              })
+              resolve(map)
             }
           })
+        }),
+        dispatch('getBase64ImageOfShortcut').then((base64Image = defaultAvatar) => {
+          commit(SET_AVATAR, base64Image)
+          return base64Image
+        }),
+        extension.emitToCurrentTab('get-title').then((title) => {
+          if (!title) return
+          commit(SET_TITLE, title)
+          return title
         })
       ])
   },
@@ -116,9 +135,10 @@ export default {
   /**
    * 获取当前 tab 的 shortcut icon 的 base64 字符串
    */
-  async getBase64ImageOfShortcut ({ commit }, payload) {
+  async getBase64ImageOfShortcut ({ commit }) {
     const uri = await extension.emitToCurrentTab('get-shortcut-icon')
     const base64Image = await getBase64Image(uri)
+    console.log('base64', base64Image)
     return base64Image
   },
 
@@ -126,6 +146,6 @@ export default {
    * 新增被模拟者
    */
   addNewOrigin ({ commit }, payload) {
-    commit(ADD_ORIGIN, payload)
+    commit(SYNC_ADD_ORIGIN, payload)
   }
 }

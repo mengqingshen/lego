@@ -15,7 +15,8 @@ export default new Vuex.Store({
   state: {
     map: [],
     role: null, // origin 被模拟者，cheater 模拟者, null 不在名单中
-    url: null
+    url: null,
+    title: ''
   },
   plugins: [storageSync],
   actions,

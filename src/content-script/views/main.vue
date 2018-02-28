@@ -51,13 +51,14 @@
         },
         'get-href': () => window.location.href,
         'get-shortcut-icon': () => {
-          const link = document.querySelector('link[rel="shortcut icon"]')
+          const link = document.querySelector('link[rel="shortcut icon"]') || document.querySelector('link[rel="icon"]')
           if (link) {
             return link.href
           }
           const url = new URL(window.location.href)
           return `${url.origin}/favicon.ico`
-        }
+        },
+        'get-title': () => document.title
       }, 'script-main')
     },
     methods: {

@@ -45,7 +45,9 @@ function getBase64Image (uri, imageType = 'png') {
       var ext = uri.substring(uri.lastIndexOf('.') + 1).toLowerCase() || imageType
       resolve(canvas.toDataURL(`image/${ext}`))
     }
-    img.onerror = reject
+    img.onerror = () => {
+      resolve()
+    }
     img.src = uri
   })
 }
