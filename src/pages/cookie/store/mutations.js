@@ -5,6 +5,20 @@
 import * as types from './mutation-types'
 
 export default {
+  [types.SYNC_DELETE_CHEATER] (state, { fromSite, toSite }) {
+    const cheaterList = state.map.find(({ url }) => url === fromSite).cheaterList
+    const index = cheaterList.find(({ origin }) => origin === toSite)
+    cheaterList.splice(index, 1)
+  },
+  [types.SYNC_DELETE_ORIGIN] (state, fromSite) {
+    const index = state.map.findIndex(({ url }) => url === fromSite)
+    state.map.splice(index, 1)
+  },
+  [types.SYNC_COOKIE] (state, { fromSite, toSite }) {
+    state.map.find(({ url }) => url === fromSite).cheaterList.find(({ origin }) => origin === toSite).cookies.forEach(cookie => {
+      cookie.status = 1
+    })
+  },
   [types.SET_TITLE] (state, title) {
     state.title = title
   },
@@ -32,7 +46,9 @@ export default {
     state.map = payload.map
   },
   [types.SYNC_ADD_ORIGIN] (state, payload) {
-    if (state.map.find((item) => item.origin === payload.origin)) return
+    console.log(state, payload)
+    if (state.map.find((item) => item.url === payload.url)) return
     state.map.push(payload)
+    console.log(state.map.length, state.map[0])
   }
 }

@@ -7,6 +7,8 @@ import {
   isFunction
 } from './utils.js'
 
+import config from '../config/config'
+
 function insertScriptToCurrentTab (file) {
   return new Promise((resolve, reject) => {
     if (!_checkTabAPI()) {
@@ -106,7 +108,6 @@ function on (listeners, monitor) {
     return false
   }
   _checkExtensionAPI() && chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
-    console.log(monitor, request)
     const command = request.command
     const data = request.data
     let listener = null

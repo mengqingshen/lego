@@ -21,7 +21,7 @@ module.exports = merge(webpackBaseConfig, {
       {
         host: 'localhost',
         port: 10040,
-        proxy: 'http://localhost:10040/'
+        proxy: 'http://localhost:8080/'
       },
       {
         reload: false

@@ -19,6 +19,6 @@ export const getAllCookie = (searchOptions) => {
 
 export const setCookie = (cookieOptions) => {
   return new Promise((resolve, reject) => {
-    chrome.cookie.set(cookieOptions, resolve)
+    chrome.cookies.set(cookieOptions, resolve)
   })
 }

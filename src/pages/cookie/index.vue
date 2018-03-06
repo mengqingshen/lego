@@ -1,7 +1,8 @@
 <script>
   import {
     mapState,
-    mapActions
+    mapActions,
+mapGetters
   } from 'vuex'
   import {
     fireResize
@@ -20,7 +21,8 @@
     },
     data () {
       return {
-        menuVisible: false
+        menuVisible: false,
+        loading: true
       }
     },
     mounted () {
@@ -33,7 +35,8 @@
       }).resize()
     },
     computed: {
-      ...mapState(['origin', 'map']),
+      ...mapState(['map']),
+      ...mapGetters(['origin']),
       pageTitle () {
         return (this.$router.meta || {}).pageTitle || ''
       }
@@ -45,6 +48,9 @@
     },
     methods: {
       ...mapActions(['init', 'clear']),
+      goHome () {
+        this.boot()
+      },
       previewMapByConsole () {
         console.table(this.map)
       },
@@ -61,23 +67,22 @@
       },
       boot () {
         this.init().then((data) => {
-          console.log('data', data)
-          if (data && data[1]) {
+          this.loading = false
+          if (data) {
             const url = data[0]
             const map = data[1]
-            const urlObj = new URL(url)
             if (url && map) {
               // 是否是被模拟者
               if (map.some((originItem) => {
-                return originItem.url === urlObj.origin
+                return originItem.url === this.origin
               })) {
                 return this.$router.push({ name: 'origin' })
               }
               // 是否是模拟者
               if (map.some((originItem) => {
                 return originItem && originItem.cheaterList && originItem.cheaterList.find(({ origin }) => {
-                  console.log(origin, urlObj.origin)
-                  return origin === urlObj.origin
+                  console.log(origin, this.origin)
+                  return origin === this.origin
                 })
               })) {
                 return this.$router.push({ name: 'cheater' })
@@ -95,11 +100,14 @@
 <template lang="pug">
   div#cookie
     md-app
-      md-app-toolbar
+      md-app-toolbar(class="md-primary")
         md-button.md-icon-button(
           @click="toggleMenu",
           v-if="!menuVisible")
           md-icon menu
+        md-button.md-icon-button(
+          @click="goHome")
+          md-icon home
         h3(
           class="md-title" style="flex: 1") cookie 搬运工
       md-app-drawer(
@@ -120,6 +128,12 @@
               span 复原
       md-app-content
         md-content
+          .md-layout.md-alignment-center-center()
+            .md-layout-item.md-size-100(:style="{ textAlign: 'center' }", v-if="loading")
+              md-progress-spinner(
+                :md-diameter="30",
+                :md-stroke="3",
+                md-mode="indeterminate")
           router-view
 </template>
 

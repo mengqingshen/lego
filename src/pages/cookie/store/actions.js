@@ -9,7 +9,10 @@ import {
   SYNC_ADD_CHEATER,
   SYNC_CLEAR,
   SET_AVATAR,
-  SET_TITLE
+  SET_TITLE,
+  SYNC_COOKIE,
+  SYNC_DELETE_ORIGIN,
+  SYNC_DELETE_CHEATER
 } from './mutation-types'
 
 import {
@@ -34,6 +37,12 @@ const {
 } = config
 
 export default {
+  deleteCheater ({ commit }, { fromSite, toSite }) {
+    commit(SYNC_DELETE_CHEATER, { fromSite, toSite })
+  },
+  deleteOrigin ({ commit }, fromSite) {
+    commit(SYNC_DELETE_ORIGIN, fromSite)
+  },
   clear ({ commit }) {
     commit(SYNC_CLEAR)
   },
@@ -52,24 +61,21 @@ export default {
   /**
    * 同步 cookie: origin -> cheater
    */
-  syncCookie ({ commit }, fromSiteDomain, toSiteUrl, oldCookies) {
-    return getAllCookie({
-      domain: fromSiteDomain
-    }).then((cookies) => {
-      const tasks = []
-      oldCookies.map(({ name }) => {
-        const originCookie = cookies.find((cookie) => cookie.name === name)
-        if (originCookie) {
-          tasks.push(setCookie({
-            url: toSiteUrl,
-            name,
-            value: originCookie,
-            httpOnly: true,
-            path: '/'
-          }))
-        }
+  syncCookie ({ commit, state }, { fromSite, toSite }) {
+    console.log(state, fromSite, toSite)
+    const cheater = state.map.find(({ url }) => url === fromSite).cheaterList.find(({ origin }) => origin === toSite)
+    return Promise.all(cheater.cookies.map(cookie => setCookie({
+      url: toSite,
+      name: cookie.name,
+      value: cookie.value,
+      httpOnly: true,
+      path: '/'
+    }))).then(() => {
+      commit({
+        type: SYNC_COOKIE,
+        fromSite,
+        toSite
       })
-      return Promise.all(tasks)
     })
   },
 
@@ -82,6 +88,7 @@ export default {
     return Promise.all(
       [
         extension.emitToCurrentTab('get-href').then((href) => {
+
           if (!href) return
           commit({
             type: SET_URL,
@@ -91,33 +98,30 @@ export default {
         }),
         getItem(storageNameSpace).then((data) => {
           // 更新下 cookie 同步状态, 并设置到 store 中
-          return new Promise((resolve, reject) => {
-            if (data && Object.keys(data).length > 0) {
-              const map = _.cloneDeep(data[storageNameSpace])
-              map.forEach((originItem) => {
-                getAllCookie({ url: originItem.url }).then(cookies => {
-                  originItem.cheaterList.forEach(cheater => {
-                    cheater.cookies.forEach(cookie => {
-                      const originCookie = cookies.find(({ name, value }) => name === cookie.name)
-                      if (!originCookie) {
-                        cookie.status = 0 // 源站点没有对应的 cookie
-                      }
-                      else if (originCookie.value === cookie.value) {
-                        cookie.status = 1 // 和源站点对应的 cookie 一致
-                      }
-                      else {
-                        cookie.status = 2 // 和源站点对应的 cookie 不一致
-                      }
-                    })
-                  })
-                })
+          const map = _.cloneDeep(data[storageNameSpace])
+          return Promise.all(map.map((originItem) => getAllCookie({ url: originItem.url }).then(cookies => {
+            return Promise.all(originItem.cheaterList.map(cheater => getAllCookie({ url: cheater.origin }).then(cheaterCookies => {
+              cheater.cookies.forEach(cookie => {
+                const originCookie = cookies.find(({ name }) => name === cookie.name)
+                const cheaterCookie = cheaterCookies.find(({ name }) => name === cookie.name)
+                Object.assign(cookie, originCookie)
+                if (!originCookie || !cheaterCookie) {
+                  cookie.status = 0 // 源站点没有对应的 cookie, 或者模拟者本身还没有对应被模拟者的 cookie
+                }
+                else if (originCookie.value === cheaterCookie.value) {
+                  cookie.status = 1 // 和源站点对应的 cookie 一致
+                }
+                else {
+                  cookie.status = 2 // 和源站点对应的 cookie 不一致
+                }
               })
-              commit({
-                type: SET_MAP,
-                map
-              })
-              resolve(map)
-            }
+            })))
+          }))).then(() => {
+            commit({
+              type: SET_MAP,
+              map
+            })
+            return map
           })
         }),
         dispatch('getBase64ImageOfShortcut').then((base64Image = defaultAvatar) => {

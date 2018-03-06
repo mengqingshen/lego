@@ -63,8 +63,10 @@
           this.addCheater({
             selectedUrl: this.selectedUrl,
             cheater: {
+              name: this.name,
               origin: this.origin,
-              cookies: this.selectedCookies
+              cookies: this.selectedCookies,
+              avatar: this.avatar
             }
           }).then(() => {
             this.$router.push({ name: 'cheater' })
