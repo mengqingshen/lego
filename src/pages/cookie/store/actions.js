@@ -88,7 +88,6 @@ export default {
     return Promise.all(
       [
         extension.emitToCurrentTab('get-href').then((href) => {
-
           if (!href) return
           commit({
             type: SET_URL,
@@ -142,7 +141,6 @@ export default {
   async getBase64ImageOfShortcut ({ commit }) {
     const uri = await extension.emitToCurrentTab('get-shortcut-icon')
     const base64Image = await getBase64Image(uri)
-    console.log('base64', base64Image)
     return base64Image
   },
 
