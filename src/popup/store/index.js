@@ -31,6 +31,7 @@ export default new Vuex.Store({
         }
         else {
           commit('toggleCurSubWin', res)
+          extension.emitToExtension('set-current-app', res)
         }
       })
     },
@@ -44,12 +45,12 @@ export default new Vuex.Store({
         return
       }
       if (state.winCreated) {
-        extension.emitToCurrentTab('show-sub-window', subWinName).then(res => {
+        return extension.emitToCurrentTab('show-sub-window', subWinName).then(res => {
           dispatch('ping')
         })
       }
       else {
-        extension.emitToExtension('create-window', subWinName).then(res => {
+        return extension.emitToExtension('create-window', subWinName).then(res => {
           dispatch('ping')
         })
       }
@@ -73,6 +74,7 @@ export default new Vuex.Store({
       state.isWinHidden = true
     },
     toggleCurSubWin: (state, subWinName) => {
+      console.log(subWinName)
       state.curSubWinName = subWinName
     }
   }

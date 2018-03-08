@@ -1,11 +1,13 @@
 import Vue from 'vue'
-
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+import 'material-design-icons/iconfont/material-icons.css'
 
 import App from './views/app'
 
-Vue.use(ElementUI)
+// ui 组件库
+Vue.use(VueMaterial)
 
 new Vue({
   el: '#app',

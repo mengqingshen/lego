@@ -145,7 +145,7 @@ module.exports = {
         use: 'pug-loader'
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
+        test: /\.(eot|ttf|woff|woff2)(\?\S*)?$/,
         use: [
           {
             loader: 'file-loader',
@@ -178,6 +178,10 @@ module.exports = {
       {
         from: 'assets/way.png',
         to: 'assets/way.png'
+      },
+      {
+        from: 'assets/svg',
+        to: 'assets/svg'
       }
     ]),
     new webpack.ProvidePlugin({
@@ -210,7 +214,7 @@ module.exports = {
     // 指定可以被 import 的文件后缀
     extensions: ['.js', '.vue', '.json', '.sass', 'scss', '.pug', '.css'],
     alias: {
-      'vue': 'vue/dist/vue.min.js',
+      'vue': 'vue/dist/vue.js',
       '@api': path.join(__dirname, 'src/api')
     }
   }
