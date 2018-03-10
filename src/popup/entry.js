@@ -6,6 +6,7 @@ import 'material-design-icons/iconfont/material-icons.css'
 
 import App from './views/app.vue'
 import store from './store'
+import draggable from '../common/components/draggable'
 
 import '../assets/way.png'
 import '../lib/style/reset.css'
@@ -14,6 +15,7 @@ import '../assets/iconfont/iconfont.css'
 
 // ui 组件库
 Vue.use(VueMaterial)
+Vue.component('draggable', draggable)
 
 new Vue({
   el: '#app',

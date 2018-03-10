@@ -7,8 +7,10 @@
 
 import extension from './chrome-extension'
 
-function fireResize (size) {
+function fireResize ({ w, h }) {
+  const size = { w: `${w}px`, h: `${h + 40}px` }
   extension.emitToCurrentTab('resize', { size })
+  extension.emitToExtension('resize', { size })
 }
 function getStringModeOfRegExp (literalStr) {
   return literalStr.replace('\\', '\\\\')
@@ -33,7 +35,6 @@ function isArray (it) {
  */
 function getBase64Image (uri, imageType = 'png') {
   return new Promise((resolve, reject) => {
-    console.log('getBase64', uri)
     const img = new Image()
     img.crossOrigin = ''
     img.onload = () => {

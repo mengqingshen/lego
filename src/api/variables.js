@@ -13,5 +13,12 @@ export const ALL_SUB_WINS = [
     name: 'cookie',
     icon: 'cookie',
     desc: 'cookie 搬运工'
-  }
+  }, {}, {}, {}, {}, {}, {}
 ]
+
+export const DESKTOP = {
+  size: {
+    h: '306px',
+    w: '240px'
+  }
+}

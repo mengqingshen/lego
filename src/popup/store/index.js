@@ -14,15 +14,22 @@ export default new Vuex.Store({
   state: {
     winCreated: false,
     isWinHidden: false,
-    curSubWinName: ''
+    curSubWinName: '',
+    size: {},
+    loading: true
   },
   actions: {
+    reset ({ commit, state }) {
+      commit('toggleCurSubWin', '')
+      extension.emitToExtension('set-current-app', '')
+    },
     /**
      * 获取当前页面功能窗口的工作状态
      */
     ping: ({ commit }) => {
       extension.emitToCurrentTab('how-are-you').then(res => {
         if (!res) {
+          commit('finishLoading')
           return
         }
         commit('didCreated')
@@ -33,6 +40,7 @@ export default new Vuex.Store({
           commit('toggleCurSubWin', res)
           extension.emitToExtension('set-current-app', res)
         }
+        commit('finishLoading')
       })
     },
 
@@ -40,8 +48,10 @@ export default new Vuex.Store({
      * 打开指定的子功能窗口
      */
     openSubWin: ({ commit, dispatch, getters, state }, subWinName) => {
-      const isDisabled = getters.subWins.find(({ name }) => name === subWinName).isDisabled
+      const subWin = getters.subWins.find((subWin) => subWin.name === subWinName)
+      const isDisabled = subWin ? subWin.isDisabled : true
       if (isDisabled) {
+        commit('finishLoading')
         return
       }
       if (state.winCreated) {
@@ -59,7 +69,7 @@ export default new Vuex.Store({
   getters: {
     subWins: state => {
       return ALL_SUB_WINS.map(item => {
-        const isDisabled = (state.winCreated && !state.isWinHidden && item.name === state.curSubWinName)
+        const isDisabled = (state.winCreated && !state.isWinHidden && item.name === state.curSubWinName) || !item.name
         return Object.assign({}, item, {
           isDisabled
         })
@@ -67,6 +77,10 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    finishLoading: (state) => {
+      state.loading = false
+    },
+    setSize: (state, size) => { state.size = size },
     didCreated: state => {
       state.winCreated = true
     },
@@ -74,7 +88,6 @@ export default new Vuex.Store({
       state.isWinHidden = true
     },
     toggleCurSubWin: (state, subWinName) => {
-      console.log(subWinName)
       state.curSubWinName = subWinName
     }
   }

@@ -27,10 +27,11 @@ mapGetters
     },
     mounted () {
       const $win = $('#cookie')
+      console.log($win.width(), $win.height())
       $win.resize(e => {
         fireResize({
-          w: $win.width() + 'px',
-          h: $win.height() + 'px'
+          w: $win.width(),
+          h: $win.height()
         })
       }).resize()
     },
@@ -99,8 +100,18 @@ mapGetters
 
 <template lang="pug">
   div#cookie
+    md-speed-dial.md-bottom-right(md-direction="top", md-effect="scale", md-event="click")
+      md-speed-dial-target.md-dense
+        md-icon view_module
+      md-speed-dial-content
+        md-button.md-icon-button(@click="previewMapByConsole")
+          md-icon find_in_page
+          md-tooltip(md-direction="left") 打印名单
+        md-button.md-icon-button(@click="reset")
+          md-icon undo
+          md-tooltip(md-direction="left") 复原
     md-app
-      md-app-toolbar(class="md-primary")
+      //- md-app-toolbar(md-elevation="0")
         md-button.md-icon-button(
           @click="toggleMenu",
           v-if="!menuVisible")
@@ -108,10 +119,10 @@ mapGetters
         md-button.md-icon-button(
           @click="goHome")
           md-icon home
-        h3(
-          class="md-title" style="flex: 1") cookie 搬运工
-      md-app-drawer(
-        :md-active.sync="menuVisible")
+        span.md-title cookie 搬运工
+      
+      //- md-app-drawer(
+        :md-active.sync="menuVisible", md-persistent="mini")
         md-toolbar.md-transparent(md-elevation="0")
           span 开发调试
           .md-toolbar-section-end
@@ -121,20 +132,18 @@ mapGetters
           md-list-item
             md-button(@click="previewMapByConsole")
               md-icon find_in_page
-              span 打印名单
+            span.md-list-item-text 打印名单
           md-list-item
             md-button(@click="reset")
-              md-icon undo
-              span 复原
+            md-icon undo
+            span.md-list-item-text 复原
       md-app-content
-        md-content
-          .md-layout.md-alignment-center-center()
-            .md-layout-item.md-size-100(:style="{ textAlign: 'center' }", v-if="loading")
-              md-progress-spinner(
-                :md-diameter="30",
-                :md-stroke="3",
-                md-mode="indeterminate")
-          router-view
+        router-view
+          div(:style="{ textAlign: 'center' }", v-if="loading")
+            md-progress-spinner(
+              :md-diameter="30",
+              :md-stroke="3",
+              md-mode="indeterminate")
 </template>
 
 <style lang="scss">

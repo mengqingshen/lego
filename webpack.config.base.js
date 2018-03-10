@@ -83,7 +83,7 @@ module.exports = {
             })
           }
         },
-        include: /pages/
+        include: [/pages/, /node_modules\/vue-material/, require.resolve('vue-material').replace('/dist/vue-material.js', '')]
       },
 
       // options 中的配置不能省略（因为默认情况下 .vue 文件中只能 lang="sass"，lang="scss" 会报错）
@@ -215,7 +215,8 @@ module.exports = {
     extensions: ['.js', '.vue', '.json', '.sass', 'scss', '.pug', '.css'],
     alias: {
       'vue': 'vue/dist/vue.js',
-      '@api': path.join(__dirname, 'src/api')
+      '@api': path.join(__dirname, 'src/api'),
+      'core': 'vue-material/src/core'
     }
   }
 }

@@ -4,6 +4,7 @@
 </template>
 <script>
   export default {
+    name: 'draggable',
     mounted () {
       $(window).resize(e => {
         this.resetMaxXY()

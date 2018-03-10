@@ -39,7 +39,10 @@ function insertCSS (file) {
  */
 function emitToExtension (command, data) {
   return new Promise(resolve => {
-    _checkExtensionAPI() && chrome.extension.sendRequest(null, { command, data }, resolve)
+    if (!_checkExtensionAPI()) {
+      return resolve()
+    }
+    chrome.extension.sendRequest(null, { command, data }, resolve)
   })
 }
 

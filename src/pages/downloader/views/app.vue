@@ -16,8 +16,8 @@
       const $win = $('#window-for-crawl')
       $win.resize(e => {
         fireResize({
-          w: $win.width() + 'px',
-          h: $win.height() + 'px'
+          w: $win.width(),
+          h: $win.height()
         })
       }).resize()
     },

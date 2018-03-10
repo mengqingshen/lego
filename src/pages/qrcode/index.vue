@@ -16,8 +16,8 @@
           }
           const $win = $('#ca-qrcode-container')
           fireResize({
-            w: $win.width() + 'px',
-            h: $win.height() + 'px'
+            w: $win.width(),
+            h: $win.height()
           })
         })
       })
