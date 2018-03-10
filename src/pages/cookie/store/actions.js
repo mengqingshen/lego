@@ -61,10 +61,16 @@ export default {
   /**
    * 同步 cookie: origin -> cheater
    */
-  syncCookie ({ commit, state }, { fromSite, toSite }) {
+  syncCookie ({ commit, state }, { fromSite, toSite, name }) {
     console.log(state, fromSite, toSite)
     const cheater = state.map.find(({ url }) => url === fromSite).cheaterList.find(({ origin }) => origin === toSite)
-    return Promise.all(cheater.cookies.map(cookie => setCookie({
+    let cookies = cheater.cookies
+    if (name !== undefined) {
+      console.log('syncCookie', fromSite, toSite, name)
+      cookies = [cookies.find(cookie => cookie.name === name)]
+    }
+
+    return Promise.all(cookies.map(cookie => setCookie({
       url: toSite,
       name: cookie.name,
       value: cookie.value,
@@ -74,7 +80,8 @@ export default {
       commit({
         type: SYNC_COOKIE,
         fromSite,
-        toSite
+        toSite,
+        name
       })
     })
   },
@@ -104,6 +111,7 @@ export default {
                 const originCookie = cookies.find(({ name }) => name === cookie.name)
                 const cheaterCookie = cheaterCookies.find(({ name }) => name === cookie.name)
                 Object.assign(cookie, originCookie)
+                console.log('比较', originCookie.value, cheaterCookie.value)
                 if (!originCookie || !cheaterCookie) {
                   cookie.status = 0 // 源站点没有对应的 cookie, 或者模拟者本身还没有对应被模拟者的 cookie
                 }

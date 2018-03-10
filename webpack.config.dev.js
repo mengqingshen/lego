@@ -16,16 +16,19 @@ module.exports = merge(webpackBaseConfig, {
       'process.env': {
         NODE_ENV: '"development"'
       }
-    }),
-    new BrowserSyncPlugin(
-      {
-        host: 'localhost',
-        port: 10040,
-        proxy: 'http://localhost:8080/'
-      },
-      {
-        reload: false
-      }
-    )
+    })
+    // new BrowserSyncPlugin(
+    //   {
+    //     host: 'localhost',
+    //     port: 10040,
+    //     proxy: 'http://localhost:8080/',
+    //     weinre: {
+    //       port: 2017
+    //     }
+    //   },
+    //   {
+    //     reload: false
+    //   }
+    // )
   ]
 })

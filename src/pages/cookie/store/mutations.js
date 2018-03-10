@@ -6,6 +6,7 @@ import * as types from './mutation-types'
 
 export default {
   [types.SYNC_DELETE_CHEATER] (state, { fromSite, toSite }) {
+    console.log(fromSite, toSite)
     const cheaterList = state.map.find(({ url }) => url === fromSite).cheaterList
     const index = cheaterList.find(({ origin }) => origin === toSite)
     cheaterList.splice(index, 1)
@@ -14,8 +15,13 @@ export default {
     const index = state.map.findIndex(({ url }) => url === fromSite)
     state.map.splice(index, 1)
   },
-  [types.SYNC_COOKIE] (state, { fromSite, toSite }) {
-    state.map.find(({ url }) => url === fromSite).cheaterList.find(({ origin }) => origin === toSite).cookies.forEach(cookie => {
+  [types.SYNC_COOKIE] (state, { fromSite, toSite, name }) {
+    let cookies = state.map.find(({ url }) => url === fromSite).cheaterList.find(({ origin }) => origin === toSite).cookies
+    if (name !== undefined) {
+      cookies = [cookies.find(cookie => cookie.name === name)]
+    }
+    console.log('SYNC_COOKIE', cookies, fromSite, toSite, name)
+    cookies.forEach(cookie => {
       cookie.status = 1
     })
   },
