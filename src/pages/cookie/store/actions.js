@@ -21,7 +21,8 @@ import {
 
 import {
   getAllCookie,
-  setCookie
+  setCookie,
+  removeCookie
 } from '../../../api/chrome-cookie'
 
 import extension from '../../../api/chrome-extension'
@@ -37,7 +38,8 @@ const {
 } = config
 
 export default {
-  deleteCheater ({ commit }, { fromSite, toSite }) {
+  async deleteCheater ({ commit, dispatch }, { fromSite, toSite }) {
+    await dispatch('removeAllCookies', toSite)
     commit(SYNC_DELETE_CHEATER, { fromSite, toSite })
   },
   deleteOrigin ({ commit }, fromSite) {
@@ -50,7 +52,8 @@ export default {
   /**
    * 新增模拟者
    */
-  async addCheater ({ commit }, { selectedUrl, cheater }) {
+  async addCheater ({ commit, dispatch }, { selectedUrl, cheater }) {
+    await dispatch('removeAllCookies', cheater.origin)
     commit({
       type: SYNC_ADD_CHEATER,
       selectedUrl,
@@ -59,14 +62,20 @@ export default {
   },
 
   /**
+   * 晴空指定 url 下的所有 cookie
+   */
+  async removeAllCookies ({ commit }, url) {
+    const cookies = await getAllCookie({ url })
+    return Promise.all(cookies.map(({ name }) => removeCookie({ url, name })))
+  },
+
+  /**
    * 同步 cookie: origin -> cheater
    */
   syncCookie ({ commit, state }, { fromSite, toSite, name }) {
-    console.log(state, fromSite, toSite)
     const cheater = state.map.find(({ url }) => url === fromSite).cheaterList.find(({ origin }) => origin === toSite)
     let cookies = cheater.cookies
     if (name !== undefined) {
-      console.log('syncCookie', fromSite, toSite, name)
       cookies = [cookies.find(cookie => cookie.name === name)]
     }
 
@@ -107,11 +116,11 @@ export default {
           const map = _.cloneDeep(data[storageNameSpace])
           return Promise.all(map.map((originItem) => getAllCookie({ url: originItem.url }).then(cookies => {
             return Promise.all(originItem.cheaterList.map(cheater => getAllCookie({ url: cheater.origin }).then(cheaterCookies => {
+              cheater.cookies = cheater.cookies.filter(cookie => cookie !== null) || []
               cheater.cookies.forEach(cookie => {
-                const originCookie = cookies.find(({ name }) => name === cookie.name)
-                const cheaterCookie = cheaterCookies.find(({ name }) => name === cookie.name)
+                const originCookie = cookies.find(item => item.name === cookie.name)
+                const cheaterCookie = cheaterCookies.find((item) => item.name === cookie.name)
                 Object.assign(cookie, originCookie)
-                console.log('比较', originCookie.value, cheaterCookie.value)
                 if (!originCookie || !cheaterCookie) {
                   cookie.status = 0 // 源站点没有对应的 cookie, 或者模拟者本身还没有对应被模拟者的 cookie
                 }

@@ -17,17 +17,19 @@
         active: 'first',
         first: false,
         second: false,
+        third: false,
+        forth: false,
         selectedUrl: null,
         originCookies: [],
-        selectedCookies: []
+        selectedCookieNames: []
       }
     },
     watch: {
       selectedUrl (url) {
         if (url) {
           getAllCookie({ url }).then((cookies) => {
-            this.originCookies = cookies
-            this.selectedCookies = cookies
+            this.originCookies = cookies ? cookies.map(item => ({ status: 0, ...item })) : []
+            this.selectedCookieNames = cookies.map(({ name }) => name)
           })
         }
       }
@@ -35,6 +37,9 @@
     computed: {
       ...mapState(['map', 'avatar']),
       ...mapGetters(['origin']),
+      selectedCookies () {
+        return this.selectedCookieNames.map(name => this.originCookies.find((item) => item.name === name))
+      },
       name: {
         get () {
           return this.$store.state.title
@@ -45,10 +50,10 @@
       },
       all: {
         set (isActive) {
-          this.selectedCookies = isActive ? this.originCookies : []
+          this.selectedCookieNames = isActive ? this.originCookies.map(({ name }) => name) : []
         },
         get () {
-          return this.selectedCookies.length === this.originCookies.length
+          return this.selectedCookieNames.length === this.originCookies.length
         }
       }
     },
@@ -112,10 +117,10 @@
         md-checkbox(v-model="all") 全选
         md-content(style="{ maxHeight: '100px', overflow:'auto' }").md-scrollbar
           md-list
-            md-list-item(:key="cookie" v-for="cookie in originCookies")
+            md-list-item(:key="cookie.name" v-for="cookie in originCookies")
               md-checkbox(
-                v-model="selectedCookies",
-                :value="cookie")
+                v-model="selectedCookieNames",
+                :value="cookie.name")
               .md-list-item-text
                 span {{cookie.name}}
                 span {{cookie.domain}}
