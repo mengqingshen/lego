@@ -68,7 +68,7 @@
       moment,
       clear () {
         this.deleteCheater({ fromSite: this.info.origin.url, toSite: this.info.cheater.origin })
-        this.$route.push({ name: 'choose-role' })
+        this.$router.push({ name: 'choose-role' })
       }
     }
   }
