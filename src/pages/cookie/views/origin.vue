@@ -37,10 +37,11 @@
       },
       cheaterStatus: {
         get () {
-          return this.info.cheaterList.filter(({ cookies }) => cookies.every(cookie => cookie.status === 1))
+          return this.info.cheaterList.filter(({ cookies }) => cookies.every(cookie => cookie.status === 1)).map(cheater => cheater.origin)
         },
         set (newVal, oldVal) {
-          const cheater = _.xor(newVal, oldVal)[0]
+          const cheaterStatus = this.info.cheaterList.filter(({ cookies }) => cookies.every(cookie => cookie.status === 1)).map(cheater => cheater.origin)
+          const cheater = _.xor(newVal, cheaterStatus)[0]
           this.$store.dispatch({
             type: 'syncCookie',
             fromSite: this.origin,
@@ -84,7 +85,7 @@
         md-switch(
           :disabled="cheater.cookies.every(cookie => cookie.status === 1)"
           v-model="cheaterStatus"
-          :value="cheater")
+          :value="cheater.origin")
         md-menu
           md-button.md-icon-button(md-menu-trigger)
             md-icon more_vert
