@@ -41,7 +41,7 @@ module.exports = {
     ...pageEntries
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, './jarvis'),
     publicPath: '/',
     filename: '[name].js',
     chunkFilename: 'chunks/[name].js'

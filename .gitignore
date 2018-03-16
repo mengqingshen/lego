@@ -1,6 +1,6 @@
 /node_modules
-dist
-dist/*
+jarvis
+jarvis/*
 .idea
 .idea/
 .DS_Store
