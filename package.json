@@ -1,8 +1,9 @@
 {
-  "name": "lego",
+  "name": "jarvis",
   "description": "sean's chrome extension",
   "author": "eli01linux@aliyun.com",
   "private": true,
+  "version": "0.0.1",
   "scripts": {
     "dev": "webpack-dev-server --content-base ./src --open --inline --hot --compress --history-api-fallback --config webpack.config.dev.js",
     "build": "webpack --progress --hide-modules --config webpack.prod.config.js",

@@ -139,7 +139,7 @@
                 @keyup.enter="handleSearchWithinDownload",
                 autofocus,
                 placeholder="输入正则进行匹配")
-              button.lego-btn.lego-btn-tiny(
+              button.jarvis-btn.jarvis-btn-tiny(
                 @click="handleSearchWithinDownload") 查找
     transition(
       mode: 'out-in',

@@ -59,7 +59,7 @@
           autofocus="autofocus",
           @keyup.enter="handleSearch",
           @input="handleInput")
-        input#crawl-all-imgs.lego-btn(
+        input#crawl-all-imgs.jarvis-btn(
           v-show="!advanced",
           type="button",
           @click="handleStart",

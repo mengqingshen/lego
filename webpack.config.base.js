@@ -18,7 +18,7 @@ findEntries(path.join(__dirname, 'src/pages')).forEach((path) => {
   pageEntries[`pages/${varPath}/index`] = `./pages/${varPath}/entry.js`
 
   const configPath = path.replace('entry.js', 'config.js')
-  const title = fs.existsSync(configPath) ? require(configPath).title : 'lego'
+  const title = fs.existsSync(configPath) ? require(configPath).title : 'jarvis'
 
   pageHtmls.push(new HtmlWebpackPlugin({
     filename: `pages/${varPath}/index.html`,
@@ -121,7 +121,7 @@ module.exports = {
 
       // 针对页面中窗口的通用样式需要提取出单独的文件，从而通过 insertCSS 注入到页面
       {
-        test: /lego\.scss$/,
+        test: /jarvis\.scss$/,
         use: extractCommomForContentCSS.extract([
           'css-loader',
           'postcss-loader',

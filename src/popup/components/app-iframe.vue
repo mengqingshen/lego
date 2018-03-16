@@ -8,7 +8,7 @@
     frameborder="0",
     seamless="seamless",
     scrolling="no",
-    id="lego-iframe",
+    id="jarvis-iframe",
     :style="{width: sizeMA.w, height: sizeMA.h}")
 </template>
 <script>

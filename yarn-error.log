@@ -15,7 +15,7 @@ Platform:
 
 npm manifest: 
   {
-    "name": "lego",
+    "name": "jarvis",
     "description": "sean's chrome extension",
     "author": "eli01linux@aliyun.com",
     "private": true,

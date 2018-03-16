@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "lego",
-  "version": "0.0.0",
+  "name": "JARVIS",
+  "version": "0.0.1",
   "description": "个人的工具箱",
   "browser_action":{
     "default_icon": "assets/way.png",

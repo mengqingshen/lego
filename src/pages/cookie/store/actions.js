@@ -118,7 +118,7 @@ export default {
         }),
         getItem(storageNameSpace).then((data) => {
           // 更新下 cookie 同步状态, 并设置到 store 中
-          const map = _.cloneDeep(data[storageNameSpace])
+          const map = data[storageNameSpace] ? _.cloneDeep(data[storageNameSpace]) : []
           return Promise.all(map.map((originItem) => getAllCookie({ url: originItem.url }).then(cookies => {
             return Promise.all(originItem.cheaterList.map(cheater => getAllCookie({ url: cheater.origin }).then(cheaterCookies => {
               cheater.cookies = cheater.cookies.filter(cookie => cookie !== null) || []
