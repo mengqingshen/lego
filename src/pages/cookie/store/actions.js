@@ -79,13 +79,19 @@ export default {
       cookies = [cookies.find(cookie => cookie.name === name)]
     }
 
-    return Promise.all(cookies.map(cookie => setCookie({
-      url: toSite,
-      name: cookie.name,
-      value: cookie.value,
-      httpOnly: true,
-      path: '/'
-    }))).then(() => {
+    // chrome.cookies.set 中可以设置的 cookie 的属性和 chrome.cookies.get 中获得的 cookie 的属性不完全一致
+    // 1. status/session/hostOnly 不能设置到 cookie 中; 2. 多了一个 url
+
+    return Promise.all(cookies.map(cookie => setCookie(Object.assign(_.pick(cookie, [
+      'expirationDate',
+      'httpOnly',
+      'name',
+      'sameSite',
+      'secure',
+      'value'
+    ]), {
+      url: toSite
+    })))).then(() => {
       commit({
         type: SYNC_COOKIE,
         fromSite,
