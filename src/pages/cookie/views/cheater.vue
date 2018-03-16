@@ -61,6 +61,18 @@
             name
           })
         }
+      },
+      allCookieStatus: {
+        get () {
+          return this.info.cheater.cookies.every(({ status }) => status === 1)
+        },
+        set (newVal) {
+          this.$store.dispatch({
+            type: 'syncCookie',
+            fromSite: this.info.origin.url,
+            toSite: this.info.cheater.origin
+          })
+        }
       }
     },
     methods: {
@@ -81,6 +93,9 @@
         md-card-header-text.ellipsis
           .md-title.ellipsis {{info.cheater.name}}
           .md-subhead.ellipsis {{info.cheater.origin}}
+          md-switch.md-primary(
+            :disabled="allCookieStatus"
+            v-model="allCookieStatus") 一键同步
         md-card-media
           md-chip(
           :class="theme") {{statusDesc}}
