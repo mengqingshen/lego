@@ -14,7 +14,7 @@ export default {
     const index = state.map.findIndex(({ url }) => url === fromSite)
     state.map.splice(index, 1)
   },
-  [types.SYNC_COOKIE] (state, { fromSite, toSite, name }) {
+  [types.SET_COOKIE] (state, { fromSite, toSite, name }) {
     console.log('>>>', fromSite, toSite, name)
     let cookies = state.map.find(({ url }) => url === fromSite).cheaterList.find(({ origin }) => origin === toSite).cookies
     if (name !== undefined) {

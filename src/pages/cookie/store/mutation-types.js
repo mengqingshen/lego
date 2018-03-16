@@ -6,7 +6,7 @@ export const SYNC_DELETE_CHEATER = 'SYNC_DELETE_CHEATER'
 
 export const SYNC_DELETE_ORIGIN = 'SYNC_DELETE_ORIGIN'
 
-export const SYNC_COOKIE = 'SYNC_COOKIE'
+export const SET_COOKIE = 'SET_COOKIE'
 
 export const SET_URL = 'SET_URL'
 

@@ -10,7 +10,7 @@ import {
   SYNC_CLEAR,
   SET_AVATAR,
   SET_TITLE,
-  SYNC_COOKIE,
+  SET_COOKIE,
   SYNC_DELETE_ORIGIN,
   SYNC_DELETE_CHEATER
 } from './mutation-types'
@@ -62,7 +62,7 @@ export default {
   },
 
   /**
-   * 晴空指定 url 下的所有 cookie
+   * 清空指定 url 下的所有 cookie
    */
   async removeAllCookies ({ commit }, url) {
     const cookies = await getAllCookie({ url })
@@ -81,7 +81,6 @@ export default {
 
     // chrome.cookies.set 中可以设置的 cookie 的属性和 chrome.cookies.get 中获得的 cookie 的属性不完全一致
     // 1. status/session/hostOnly 不能设置到 cookie 中; 2. 多了一个 url
-
     return Promise.all(cookies.map(cookie => setCookie(Object.assign(_.pick(cookie, [
       'expirationDate',
       'httpOnly',
@@ -93,7 +92,7 @@ export default {
       url: toSite
     })))).then(() => {
       commit({
-        type: SYNC_COOKIE,
+        type: SET_COOKIE,
         fromSite,
         toSite,
         name
